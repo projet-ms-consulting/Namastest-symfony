@@ -1,0 +1,35 @@
+{% extends 'base-inscription-connexion.html.twig' %}
+{% form_theme registrationForm with [
+    'bootstrap_4_layout.html.twig',
+    'Resources/GregwarCaptchaBundle/views/captcha.html.twig'
+] %}
+
+{% block title %}Inscription {{ parent() }}{% endblock %}
+
+{% block body %}
+
+    <div class="col-12 col-md-12 col-lg-8 offset-lg-2 form-register">
+        <div class="col-md-6  logo-register">
+            <h1 class="text-center">Inscription</h1>
+            <p>Vous n'avez pas d'espace client ?</p>
+            <p>Enregistrez-vous !</p>
+            <img src="{{ asset('img/Logo_App_With_NT.png') }}" alt="Namastest">
+        </div>
+        {{ form_start(registrationForm, {attr: {novalidate:'novalidate'}}) }}
+        {{ form_widget(registrationForm) }}
+        <div class="mt-3 col-12 d-flex checkboxes-login">
+            <input type="checkbox" value="false" id="show-password">
+            <label for="show-password">Montrer le mot de passe</label>
+        </div>
+        <p class="text-color-blue">En vous inscrivant, vous reconnaissez avoir pris connaissance et acceptez nos
+            <a href="">conditions générales d'utilisation.</a>
+        </p>
+        <button type="submit" class="btn btn-lg mt-4 btn-primary">S'inscrire</button>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/utils/togglePasswordVisibility.js') }}"></script>
+{% endblock %}

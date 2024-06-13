@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord {{ parent() }}{% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set viewTemp = false %}
+    {% set createTemp = false %}
+    {% set viewCata = false %}
+    {% set createCata = false %}
+    {% set viewCamp = false %}
+    {% set createCamp = false %}
+    {% set viewPart = false %}
+    {% set addPart = false %}
+    {% set viewRole = false %}
+    {% set addRole = false %}
+    
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'VOIRTEMP' or r.code == 'CREETEMP' or r.code == 'VOIRCATA'
+        or r.code == 'CREECATA' or r.code == 'VOIRCAMP' or r.code == 'CREECAMP' or r.code == 'VOIRPART'
+        or r.code == 'AJOUPART' or r.code == 'VOIRROLE' or r.code == 'AJOUROLE') %}
+            {% if droit.code == 'VOIRTEMP' %}
+                {% set viewTemp = true %}
+            {% endif %}
+            {% if droit.code == 'CREETEMP' %}
+                {% set createTemp = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRCATA' %}
+                {% set viewCata = true %}
+            {% endif %}
+            {% if droit.code == 'CREECATA' %}
+                {% set createCata = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRCAMP' %}
+                {% set viewCamp = true %}
+            {% endif %}
+            {% if droit.code == 'CREECAMP' %}
+                {% set createCamp = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRPART' %}
+                {% set viewPart = true %}
+            {% endif %}
+            {% if droit.code == 'AJOUPART' %}
+                {% set addPart = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRROLE' %}
+                {% set viewRole = true %}
+            {% endif %}
+            {% if droit.code == 'AJOUROLE' %}
+                {% set addRole = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set viewTemp = true %}
+    {% set createTemp = true %}
+    {% set viewCata = true %}
+    {% set createCata = true %}
+    {% set viewCamp = true %}
+    {% set createCamp = true %}
+    {% set viewPart = true %}
+    {% set addPart = true %}
+    {% set viewRole = true %}
+    {% set addRole = true %}
+{% endif %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center mb-5">Tableau de bord - {{ projet.nom }}</h1>
+
+        <hr>
+        <h2 class="text-center">Contenu du projet</h2>
+        <hr>
+
+        {% if viewTemp or createTemp or viewCata or createCata or viewCamp or createCamp %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 text-center mb-3">
+                {% if viewTemp or createTemp %}
+                    <div class="case">
+                        <h3> <i class="far fa-list-alt"></i> Cas de test</h3>
+                        <div class="infos">
+                            Créez et gérez vos cas de tests. Placez-les dans des catalogues. Utilisez et réutilisez les dans des campagnes.
+                        </div>
+                        <ul>
+                            {% if viewTemp %}
+                                <li>
+                                    <a href="{{ path('templates_test_liste', {'id': projet.id}) }}">Liste des cas</a>
+                                </li>
+                            {% endif %}{% if createTemp %}
+                                <li>
+                                    <a href="{{ path('templates_test_creer', {'id': projet.id}) }}">Créer un nouveau cas</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if viewCata or createCata %}
+                    <div class="case">
+                        <h3><i class="fas fa-folder-open"></i> Catalogues de tests</h3>
+                        <div class="infos">
+                            Retrouvez vos cas de tests catégorisés dans un catalogue. Ajoutez ces catalogues à des campagnes.
+                        </div>
+                        <ul>
+                            {% if viewCata %}
+                                <li>
+                                    <a href="{{ path('catalogue_liste', {'projetId': projet.id}) }}">Liste des catalogues</a>
+                                </li>
+                            {% endif %}{% if createCata %}
+                                <li>
+                                    <a href="{{ path('catalogue_create', {'projetId': projet.id}) }}">Créer un nouveau catalogue</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if viewCamp or createCamp %}
+                    <div class="case">
+                        <h3> <i class="fas fa-receipt"></i> Campagnes de tests</h3>
+                        <div class="infos">
+                            Préparez vos campagnes en ajoutant des tests et catalogues. Exécutez-les et consultez les résultats.
+                        </div>
+                        <ul>
+                            {% if viewCamp %}
+                                <li>
+                                    <a href="{{ path('campagnes_liste', {'idProjet': projet.id}) }}">Liste des campagnes</a>
+                                </li>
+                            {% endif %}{% if createCamp %}
+                                <li>
+                                    <a href="{{ path('campagnes_creer', {'idProjet': projet.id}) }}">Créer une nouvelle campagne</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="text-center my-5">Vous ne disposez pas des autorisations nécessaires pour accéder au contenu du projet.</p>
+        {% endif %}
+
+        <hr>
+        <h2 class="text-center">Gestion du projet</h2>
+        <hr>
+
+        {% if viewPart or addPart or viewRole or addRole %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 text-center">
+                {% if viewPart or addPart %}
+                    <div class="case offset-lg-2">
+                        <h3><i class="fas fa-users"></i> Participants</h3>
+                        <div class="infos">
+                            Invitez d'autres collaborateurs à participer au projet et consultez les participants actuels.
+                        </div>
+                        <ul>
+                            {% if viewPart %}
+                                <li>
+                                    <a href="{{ path('participant_liste', {'projetId': projet.id}) }}">Liste des participants</a>
+                                </li>
+                            {% endif %}{% if addPart %}
+                                <li>
+                                    <a href="{{ path('participant_ajouter', {'projetId': projet.id}) }}">Inviter un nouveau participant</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if viewRole or addRole %}
+                    <div class="case">
+                        <h3><i class="fas fa-user-shield"></i> Roles</h3>
+                        <div class="infos">
+                            Visualisez et modifiez les droits liés aux rôles utilisateurs. Créez un nouveau rôle.
+                        </div>
+                        <ul>
+                            {% if viewRole %}
+                                <li>
+                                    <a href="{{ path('role_liste', {'projetId': projet.id}) }}">Liste des rôles</a>
+                                </li>
+                            {% endif %}{% if addRole %}
+                                <li>
+                                    <a href="{{ path('role_ajouter', {'projetId': projet.id}) }}">Créer un nouveau rôle</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="text-center my-5">Vous ne disposez pas des autorisations nécessaires pour accéder à la gestion du projet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

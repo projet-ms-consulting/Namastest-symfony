@@ -1,0 +1,61 @@
+{# TODO : video aide à l'importation dans Jira #}
+<span class="text">
+    Prérequis :
+</span> <br>
+<span class="text">
+    - Un projet Jira
+</span> <br>
+<span class="text">
+    - Un fichier Csv téléchargé depuis Namastest
+</span> <br>
+<span class="text">
+    - Un champ de texte personnalisé sur le type de ticket "Bug" et "Story" de Jira (par exemple : "Précisions sur le résultat du test", "Résultat du test", etc)
+</span> <br> <br>
+<span class="text">
+    Accédez à la page d'importation de tickets dans Jira. Cette dernière peut se trouver dans la recherche avancée de tickets, lorque vous cliquez sur les trois petits points sous votre icône de profil. Le menu déroulant vous propose l'option "Importer des tickets à partir d'un fichier Csv".
+</span> <br> <br>
+<span class="text">
+    Sélectionnez le fichier que vous avez téléchargé depuis Namastest et cliquez sur Suivant. Vous configurez les paramètres. Entrez ces options :
+</span> <br>
+<span class="text">
+    - Importer dans le projet : Sélectionnez votre projet Jira.
+</span> <br>
+<span class="text">
+    - Encodage du fichier : Conservez la valeur par défaut (UTF-8)
+</span> <br>
+<span class="text">
+    - Délimiteur : ';'
+</span> <br>
+<span class="text">
+    - Format de date : Conservez la valeur par défaut (dd/MMM/yy h:mm a) (Nous n'utilisons pas de date pour les tests)
+</span> <br> <br>
+<span class="text">
+    Cliquez sur Suivant. Vous allez mapper les champs. Nous vous proposons ces options :
+</span> <br>
+<span class="text">
+    - Description : Description
+</span> <br>
+<span class="text">
+    - Nom : Résumé
+</span> <br>
+<span class="text">
+    - Ordre : Conservez la valeur par défaut (Ne pas mapper ce champ)
+</span> <br>
+<span class="text">
+    - Précisions sur le résultat : Entrez le champ de type texte personnalisé que vous avez créé en amont (comme indiqué dans les prérequis)
+</span> <br>
+<span class="text">
+    - Résultat : Type de Ticket
+</span> <br> <br>
+<span class="text">
+    Cliquez sur Suivant. Une nouvelle page sera affichée, vous proposant de choisir le type de ticket souhaité selon le résultat du test. Voici les valeurs proposées :
+</span> <br>
+<span class="text">
+    - KO : Bug
+</span> <br>
+<span class="text">
+    - OK : Story
+</span> <br> <br>
+<span class="text">
+    Cliquez ensuite sur Valider pour vérifier la bonne importation, puis vous pouvez cliquer sur Démarrer l'importation. L'importation peut être plus ou moins longue en fonction du nombre de tickets que vous souhaitez importer.
+</span> <br>

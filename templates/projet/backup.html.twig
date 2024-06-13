@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% form_theme formUpload 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Sauvegarde du projet - {{ projet.nom }} {{ parent() }}{% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set backup = false %}
+
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'BACKUPPR') %}
+            {% if droit.code == 'BACKUPPR' %}
+                {% set backup = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set backup = true %}
+{% endif %}
+
+{% block body %}
+    <div class="container">
+
+        {% if backup %}
+            <h1 class="text-center mb-5">Sauvegarde du projet - {{ projet.nom }}</h1>
+
+            <hr>
+            <div>
+                Vous pouvez télécharger un fichier de sauvegarde de votre projet. Il vous permettra ensuite de faire un "rollback" (retour en arrière) pour restaurer le projet grâce au fichier de sauvegarde. Nous vous déconseillons fortement de restaurer un projet avec un fichier qui n'a pas été téléchargé depuis le bouton ci-dessous.
+            </div>
+            <hr>
+            <h3 class="mb-5">Sauvegarder le projet</h3>
+            <a class="btn btn-lg btn-primary mt-3" href="{{ path('projet_exporter', {'projetId': projet.id}) }}"><i class="fas fa-file-export"></i> Télécharger le fichier de sauvegarde</a>
+
+            <hr>
+            <h3 class="mb-5">Restaurer le projet</h3>
+            <div>
+                Attention ! Cette opération supprime tout le contenu de votre projet (cas de test, catalogues, campagnes) et réimporte tout grâce au fichier que vous allez choisir.
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 text-center mb-3">
+                {{ form_start(formUpload) }}
+                {{ form_widget(formUpload) }}
+                <div class="sauv-bouton">
+                    <button type="submit" class="btn btn-lg btn-primary deleteLink" data-message="Voulez-vous vraiment restaurer le projet grâce à ce fichier de sauvegarde ? Les changements depuis que le fichier a été téléchargé ne seront pas récupérables.">
+                        <i class="fas fa-file-import"></i> Restaurer le projet
+                    </button>
+                </div>
+
+                {{ form_end(formUpload) }}
+            </div>
+            <div>
+                Cette opération peut être un peu longue.
+            </div>
+            <a class="btn btn-primary mt-2" href="{{ path('projet_liste') }}">
+                Retour à la liste des projets
+            </a>
+        {% else %}
+            <p class="text-center my-5">Vous ne disposez pas des autorisations nécessaires pour accéder à la sauvegarde du projet.</p>
+            <a class="btn btn-primary mt-2" href="{{ path('projet_liste') }}">
+                Retour à la liste des projets
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/utils/alertDelete.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base-vitrine.html.twig' %}
+
+{% block title %}Mentions légales {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="col-12 col-md-12 col-lg-8 offset-lg-2 form-register">
+        <div>
+            <div class="mentions-legales-header  ">
+                <img width="120" src="{{ asset('img/Logo_App_With_NT.png') }}" alt="Logo de namastest">
+                <h4>Mentions légales</h4>
+            </div>
+            <div class="mentions-legales-container">
+                <p>Le site <a href="http://namastest.com">http://namastest.com</a>  est mis à la disposition des utilisateurs par la société MS Consulting, 42 Avenue des Félibres 13012 MARSEILLE 12</p>
+                <p>RCS : 804 155 604 R.C.S MARSEILLE</p>
+                <p>Capital Social : 1.000 €</p>
+                <p>N° TVA : FR00804155604</p>
+                <p>MS Consulting est une entreprise spécialisée dans le conseil et la gestion de projets des méthodologies reconnues, qu'elles soient agiles, prédictives, hybrides...</p>
+                <p>MS Consulting est l’éditeur du site <a href="http://namastest.com">http://namastest.com</a></p>
+                <p>Responsable de la publication : Michaël Sanchez</p>
+                <p>Adresse électronique : michael.sanchez@msconsulting-europe.com</p>
+                <p>Site internet : <a href="https://msconsulting-europe.com">https://msconsulting-europe.com</a></p>
+                <p>Les photos/icônes du site ne sont pas libres de droit hormis celles provenant de ressources externes tels que font awesome.</p>
+                <p>Hébergeur du site Internet : Amazon Web Services EMEA SARL <a href="https://aws.amazon.com">https://aws.amazon.com</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+{% form_theme formAddToCampagne 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}Contenu du catalogue de tests {{ parent() }}{% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set editCata = false %}
+    {% set viewTemp = false %}
+    {% set createTemp = false %}
+    {% set editTemp = false %}
+    {% set addTest = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'EDITCATA' or r.code == 'VOIRTEMP' or r.code == 'CREETEMP'
+        or r.code == 'EDITTEMP' or r.code == 'AJOUTEST') %}
+            {% if droit.code == 'EDITCATA' %}
+                {% set editCata = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRTEMP' %}
+                {% set viewTemp = true %}
+            {% endif %}
+            {% if droit.code == 'CREETEMP' %}
+                {% set createTemp = true %}
+            {% endif %}
+            {% if droit.code == 'EDITTEMP' %}
+                {% set editTemp = true %}
+            {% endif %}
+            {% if droit.code == 'AJOUTEST' %}
+                {% set addTest = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set editCata = true %}
+    {% set viewTemp = true %}
+    {% set createTemp = true %}
+    {% set editTemp = true %}
+    {% set addTest = true %}
+{% endif %}
+
+{% block body %}
+    <div class="row row-cols-1">
+        <h2 class="text-center">{{ catalogue.libelle }}</h2>
+        <hr>
+        {% if catalogue.templateCatalogueRelation is not empty %}
+            {{ form_start(formAddToCampagne) }}
+            {% if editCata or addTest %}
+                <div class="row">
+                    {% include 'inc/barres-action/barre-actions-detail-catalogue.html.twig' with {'projetId': projet.id, 'catalogueId': catalogue.id } %}
+                </div>
+            {% endif %}
+            {% if addTest or editCata %}
+                <div class="info">
+                    <a class="btn petit-btn btn-lg btn-primary col-3 m-1" title="Afficher/Cacher l'aide" id="bouton-afficher-informations">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <h3 class="title-info d-none">Informations</h3>
+                </div>
+                <div class="information-templates-tests d-none">
+                    {% if addTest %}
+                        <div>
+                            <p>Pour ajouter plusieurs tests d'un coup à une campagne, cliquez sur le bouton "Ajout à campagne", puis vous pouvez...</p>
+                            <div class="explain-test-behavior">
+                                <p class="step-1-background">1 - Sélectionner des tests</p>
+                                <p class="step-2-background">2 - Sélectionner une campagne</p>
+                                <p class="step-3-background">3 - Cliquer sur enregister, et voilà</p>
+                            </div>
+                            <p>Cliquez sur "Cacher les campagnes" pour cacher le formulaire, et sur le bouton info pour cacher l'aide</p>
+                        </div>
+                    {% endif %}
+                    {% if editCata %}
+                        <div>
+                            <p>Pour retirer plusieurs tests du catalogue d'un coup, vous pouvez...</p>
+                            <div class="explain-test-behavior">
+                                <p class="step-1-background">1 - Sélectionner des tests</p>
+                                <p class="step-2-background">2 - Cliquer sur "Retirer des cas.."</p>
+                                <p class="step-3-background">3 - Les cas de test sont retirés</p>
+                            </div>
+                            <p>Vous pouvez aussi cliquer sur le bouton de modification de chaque test afin de modifier son nom et sa description</p>
+                            <p>Vous pouvez aussi cliquer sur le bouton d'accès de chaque cas detest afin de consulter ses détails</p>
+                            <p>Vous pouvez aussi cliquer sur le bouton de suppression de chaque cas de test afin de le retirer du catalogue</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div id="form-add-campagne" class="d-none">
+                {{ form_label(formAddToCampagne.campagne) }}
+                {{ form_widget(formAddToCampagne.campagne) }}
+
+                <button class="btn btn-lg btn-hard-fonce mt-3" type="submit" name="add-to-campagne">Ajouter</button>
+            </div>
+
+            <div class="container-searchbar-and-button">
+                <div class="container-searchbar">
+                    <label for="searchbar-catalogue-detail">Rechercher un test par son nom</label>
+                    <div>
+                        <span><i class="fas fa-search"></i></span>
+                        <input id="searchbar-catalogue-detail" class="searchbar-input" placeholder="Rechercher un test.." type="text">
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped table-sortable">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" onclick="toggle(this)"></th>
+                        <th scope="col" class="sort-column">#</th>
+                        <th scope="col" class="sort-column">Nom</th>
+                        <th scope="col" class="sort-column">Description</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="drag-and-drop" id="sortable">
+                    {% for relation in catalogue.templateCatalogueRelation %}
+                        <tr data-id="{{ relation.template.id }}" class="test" rel="{{ relation.template.id }}">
+                            <td>
+                                <input type="checkbox" id="campagne_choice_test_{{ relation.template.id }}" name="campagne_choice[test][]" class="form-check-input test-checkboxes" value="{{ relation.template.id }}">
+                            </td>
+                            <td class="ordre">{{ relation.ordre }}</td>
+                            <td class="col-lg-2 col-md-2">
+                                <label class="form-check-label test-nom nom-test" for="campagne_choice_test_{{ relation.template.id }}">{{ relation.template.nom }}</label>
+                            </td>
+                            <td class="test-description description-test col-md-4 col-lg-7">{{ relation.template.description | nl2br }}</td>
+                            <td>
+                                {% if viewTemp %}
+                                    <a href="{{ path('templates_test_detail', {'id': projet.id, 'idDetail': relation.template.id}) }}"
+                                       class="btn btn-green py-2" title="Afficher le détail du template de test">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </a>
+                                {% endif %}
+                                {% if editTemp %}
+                                    <a href="{{ path('templates_test_update', {'id': projet.id, 'idUpdate': relation.template.id}) }}"
+                                       class="btn btn-fonce py-2" title="Modifier le template de test">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                {% endif %}
+                                {% if editCata %}
+                                    <a   class="btn btn-red py-2"
+                                         title="Supprimer le template de test du catalogue"
+                                         data-bs-toggle="modal"
+                                         data-bs-target="#deleteModal"
+                                         data-bs-type="le template de test"
+                                         data-bs-name="{{ relation.template.nom }}"
+                                         data-bs-id="{{ relation.template.id }}"
+                                         data-bs-path="{{ path('catalogue_delete_test', {'id': catalogue.id, 'idDelete': relation.template.id, 'projetId': projet.id}) }}"
+                                         href="#supprimer">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div style="display : none">{{ form_widget(formAddToCampagne.test) }}</div>
+            {{ form_end(formAddToCampagne) }}
+        {% else %}
+            <div class="text-center mt-5">
+                <p>Vous n'avez assigné aucun template à ce catalogue pour le moment.</p>
+                {% if editCata and createTemp %}
+                    <a class="btn btn-lg btn-primary" title="Ajouter un template de test" href="{{ path('catalogue_creer_test', {'catalogueId': catalogue.id, 'projetId': projet.id }) }}">
+                        <i class="fa fa-plus"></i>
+                        <span class="text-ab-link">Ajouter un test</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% include 'inc/modals/delete-modal.html.twig' %}
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/utils/dragAndDrop.js') }}" class="{{ path('catalogue_ordonner', {'catalogueId': catalogue.id, 'projetId': projet.id}) }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+    <script src="{{ asset('scripts/utils/toggleTestAllCheckbox.js') }}"></script>
+    <script src="{{ asset('scripts/catalogues/scriptsPageCatalogue.js') }}"></script>
+    <script src="{{ asset('scripts/utils/sortableFilter.js')}}"></script>
+    <script src="{{ asset('scripts/catalogues/searchbarCatalogueDetail.js') }}"></script>
+    <script src="{{ asset('scripts/utils/alertDelete.js') }}"></script>
+{% endblock %}

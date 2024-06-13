@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vos cas de test {{ parent() }}{% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set createTemp = false %}
+    {% set deleteTemp = false %}
+    {% set viewCata = false %}
+    {% set editCata = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => r.code == 'CREETEMP' or r.code == 'SUPPTEMP' or r.code == 'VOIRCATA' or r.code == 'EDITCATA') %}
+            {% if droit.code == 'CREETEMP' %}
+                {% set createTemp = true %}
+            {% endif %}
+            {% if droit.code == 'SUPPTEMP' %}
+                {% set deleteTemp = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRCATA' %}
+                {% set viewCata = true %}
+            {% endif %}
+            {% if droit.code == 'EDITCATA' %}
+                {% set editCata = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set createTemp = true %}
+    {% set deleteTemp = true %}
+    {% set viewCata = true %}
+    {% set editCata = true %}
+{% endif %}
+
+{% block body %}
+    <div class="row row-cols-1">
+        <div>
+            <h1 class="text-center">Vos cas de test</h1>
+            <hr>
+            {% if templateTest is empty %}
+                <div class="text-center mt-5">
+                    <p>Vous n'avez créé aucun test pour le moment.</p>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-lg btn-primary m-3" href="{{ path('templates_test_creer', {'id' : projet.id}) }}">
+                            Créer un cas de test
+                        </a>
+                        {% include'inc/modals/import-excel-test-modal.html.twig' %}
+                    </div>
+                </div>
+                <div style="display:none;">
+                    {{ form_start(cataloguesForm) }}
+                    {{ form_widget(cataloguesForm.catalogue) }}
+                </div>
+            {% else %}
+                {% if createTemp %}
+                    <div class="row">
+                        {% include 'inc/barres-action/barre-actions-templates-liste.html.twig' %}
+                    </div>
+                {% endif %}
+                <div class="row">
+                    {% if viewCata and editCata %}
+                        <div class="info">
+                            <a class="btn btn-lg btn-primary" title="Afficher/Cacher l'aide" id="bouton-afficher-informations">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <h3 class="title-info">Informations</h3>
+                        </div>
+                        <div class="information-templates-tests">
+                            <div class="explain-test-behavior">
+                                <p class="step-1-background">1 - Sélectionner des tests</p>
+                                <p class="step-2-background">2 - Cliquer sur le bouton Ajouter</p>
+                                <p class="step-3-background">3 - Sélectionner vos catalogues</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {{ form_start(cataloguesForm) }}
+                        <div class="catalogues-list-templates-tests">
+                        {% if viewCata == false and editCata == false %}
+                            <div class="d-none">
+                        {% endif %}
+                        {% if viewCata == false and editCata == false %}
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="info">
+                            <a class="btn btn-lg btn-primary mr-3" title="Ajouter un catalogue de test" id="bouton-afficher-cas-de-test">
+                                <i class="far fa-copy"></i>
+                            </a>
+                            <h3 class="title-info">Liste des tests</h3>
+                        </div>
+                            <div class="display-tests">
+                                    <div class="container-searchbar-and-button">
+                                        <div class="container-searchbar">
+                                            <label for="searchbar-templates-tests"></label>
+                                            <div>
+                                                <span><i class="fas fa-search"></i></span>
+                                                <input id="searchbar-templates-tests" class="searchbar-input" type="text" placeholder=" Rechercher par nom...">
+                                            </div>
+                                        </div>
+                                        <div class="add-delete-tests-btn">
+                                            {% if viewCata and editCata %}
+                                                <button type="button" class="btn btn-lg btn-tres-fonce mt-1 mb-1" data-bs-toggle="modal" data-bs-target="#addTestModal"><i class="fas fa-folder-open"></i> Ajouter à des catalogues</button>
+                                            {% endif %}
+                                            {% if deleteTemp %}
+                                                <button class="btn btn-lg btn-red deleteLink mt-1 mb-1" type="submit" name="delete-tests" data-message="Voulez-vous vraiment supprimer cette sélection de tests ? Ces données ne seront pas récupérables.">
+                                                    <i class="fas fa-trash-alt"></i> Supprimer
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                        {# Modal Bootstrap pour afficher le formulaire qui contient les catlogue #}
+                                        {% if viewCata and editCata %}
+                                            <div class="modal fade" id="addTestModal" tabindex="-1" aria-labelledby="addTestModal" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="addTestModal"><i class="fas fa-folder-open" style="color:var(--blue5)"></i> Ajouter des cas de tests à un catalogue</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>-> Sélectionner des catalogues puis cliquer sur ajouter pour ajouter vos cas de tests. </p>
+                                                            <hr>
+                                                            {{ form_widget(cataloguesForm.catalogue) }}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            {% if viewCata and editCata %}
+                                                                <button class="btn btn-hard-fonce mt-3 mb-3" type="submit" name="add-tests">Ajouter</button>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <table class="table table-striped table-sortable" id="table-template-tests" data-source="{{ path('api_api_template_test', {'projetId': projet.id}) }}">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"><input type="checkbox" onclick="toggle(this)"></th>
+                                            <th scope="col" class="sort-column">#</th>
+                                            <th scope="col" class="sort-column">Nom</th>
+                                            <th scope="col" class="sort-column">Description</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="drag-and-drop" id="sortable" >
+                                        {#
+                                            Les cas de tests son chargés à partir de ce fichier :
+                                            ApiSearchbarCasDeTest.js
+                                            Les cas de tests contenus dans le  fichier reprennent le formulaire TemplateTestAndCatalogueChoiceBoxesType.php qui contient
+                                            Seul les informations générés par l'entité template de test sont reprises
+                                            Les informations en BDD sont récupérer à partir du controller avec la route api_api_template_test sur
+                                            la table avec le lien de la datasource
+                                        #}
+                                        </tbody>
+                                    </table>
+
+                                    {# Display none sur les formulaires de base #}
+                                    <div style="display: none;">
+                                        {{ form_widget(cataloguesForm.test) }}
+                                    </div>
+                                {{ form_end(cataloguesForm) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% include 'inc/modals/delete-modal.html.twig' %}
+            </div>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/utils/alertDelete.js') }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+    <script src="{{ asset('scripts/utils/dragAndDrop.js') }}" class="{{ path('templates_test_ordonner', {'id' : projet.id }) }}"></script>
+    <script src="{{ asset('scripts/utils/toggleTestAllCheckbox.js') }}"></script>
+    <script src="{{ asset('scripts/tests/scriptPageTemplateDeTests.js') }}"></script>
+    <script src="{{ asset('scripts/tests/ApiSearchbarCasDeTest.js') }}"></script>
+    <script src="{{ asset('scripts/utils/sortableFilter.js')}}"></script>
+    <script src="{{ asset('scripts/campagnes/scriptsPageCampagne.js')}}"></script>
+{% endblock %}
+
+
+

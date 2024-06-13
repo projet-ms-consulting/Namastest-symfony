@@ -1,0 +1,138 @@
+.card-size {
+    border-radius: 15px;
+    margin : 2rem auto;
+}
+
+.card-center {
+    padding: 3rem 0;
+}
+
+.nos-formules-page-Freemium {
+    color:white;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.logo-tableau-validation {
+    width: 35px;
+    height: 35px;
+}
+
+tbody {
+    color: black;
+}
+
+table {
+    margin: 35px 0px 25px 35px;
+    table-layout: fixed;
+    width: 95%;
+    border-collapse: collapse;
+}
+
+thead th:nth-child(1) {
+    width: 30%;
+}
+
+thead th:nth-child(2) {
+    width: 23.3%;
+}
+
+thead th:nth-child(3) {
+    width: 23.3%;
+}
+
+thead th:nth-child(4) {
+    width: 23.3%;
+}
+
+th, td {
+    padding: 1.25rem;
+}
+
+thead, tfoot {
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
+
+thead th, tfoot th {
+    background: linear-gradient(to bottom, rgb(3, 19, 53), rgb(30, 124, 158));
+    padding: 1.25rem;
+}
+
+
+thead th:first-child { border-top-left-radius: 15px; }
+thead th:last-child { border-top-right-radius: 15px; }
+tfoot th:first-child  { border-bottom-left-radius: 15px; }
+tfoot th:last-child  { border-bottom-right-radius: 15px; }
+
+tbody tr:nth-child(odd) {
+    background-color: var(--white);
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--blue1);
+}
+
+.title-page-freemium {
+    background-color: var(--blue5);
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+}
+
+.vitrine-namastest-title .h2-freemium {
+    margin: 0;
+}
+
+
+.vitrine-namastest-produit img {
+    max-width: 40%;
+    max-height: 200px;
+    display: block;
+    margin: auto;
+    margin-top: 0;
+}
+
+.atouts {
+    min-height: inherit;
+    margin: 2rem auto;
+}
+
+.footer img {
+    margin: 0;
+    min-width: 160px;
+    min-height: 130px;
+    max-width: 160px;
+    max-height: 130px
+}
+
+/****************************************************************************/
+/*CODE PAGE ADMIN*/
+
+.card-title-admin {
+    color: var(--blue3);
+    font-size: 1.75rem;
+}
+
+.card-admin-footer {
+    background-color: var(--blue2);
+    color : white;
+}
+
+.btn-position{
+    position: inherit;
+}
+
+.card-admin {
+    display: flex;
+    justify-content: space-between;
+}
+.namastest {
+    font-weight: 1500;
+}
+
+.btn-non-hover:hover{
+    background-color: #1e7c9e;
+    border : 1px solid #1e7c9e;
+}
+

@@ -1,0 +1,20 @@
+{% extends 'base-projet.html.twig' %}
+{% form_theme supportType 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+<h1 class="text-center m-3">Support</h1>
+
+    <div class="container col-12 col-md-6 offset-md-3">
+    {{ form_start(supportType, {attr: {novalidate:'novalidate'}}) }}
+
+    {{ form_widget(supportType) }}
+    <button class="btn btn-lg btn-primary mt-3">Valider</button>
+    <a href="{{ path('projet_liste') }}" class="btn btn-lg btn-secondary mt-3">Retour à l'accueil</a>
+
+    {{ form_end(supportType) }}
+</div>
+
+{% endblock %}
+{% block title %}
+    Support {{ parent() }}
+{% endblock %}

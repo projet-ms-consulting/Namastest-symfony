@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% form_theme formCatalogue 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Modifier un catalogue de tests {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container col-12 col-md-6 offset-md-3">
+        <h1 class="text-center m-3">Modifier le catalogue {{ catalogue.libelle }}</h1>
+        {{ form_start(formCatalogue) }}
+        {{ form_widget(formCatalogue) }}
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Modifier
+        </button>
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+        {{ form_end(formCatalogue) }}
+    </div>
+{% endblock %}
+

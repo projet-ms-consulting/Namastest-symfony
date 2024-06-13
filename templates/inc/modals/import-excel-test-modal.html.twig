@@ -1,0 +1,38 @@
+<div class="m-3">
+    <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#importFileTemplateTest"><img width=35" src="{{ asset('img/Excel.png') }}" alt=""> Importer des tests via Excel</button>
+
+    <div style="text-align: left;" class="modal fade" id="importFileTemplateTest" tabindex="-1" aria-labelledby="importFileTemplateTest" aria-hidden="true">
+        <div width="100vw" class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importFileTemplateTest">
+                        <img width=70" src="{{ asset('img/Excel.png') }}" alt="">
+                        Ajouter des tests à partir d'Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Fichiers acceptés : .csv .xlsx</p>
+                    <hr>
+                    <p>1 -> Télécharger un fichier type : </p>
+                    <div class="d-flex">
+                        <a href="{{ path('templates_test_export_excel_csv', {'id': projet.id}) }}" class="btn btn-lg btn-green-fonce text-center m-1 mb-3">CSV</a>
+                        <a href="{{ path('templates_test_export_excel_xlsx', {'id': projet.id}) }}" class="btn btn-lg btn-green-fonce text-center m-1 mb-3">XLSX</a>
+                    </div>
+                    <hr>
+                    <p>2 -> Compléter le fichier</p>
+                    <hr>
+                    <p>3 -> Importer un fichier :</p>
+                    {{ form_start(importForm) }}
+                    {{ form_widget(importForm) }}
+
+                </div>
+                <div class="modal-footer" >
+                    <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-lg btn-green-fonce" name="importTemplateTestFile">Importer</button>
+                    {{ form_end(importForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

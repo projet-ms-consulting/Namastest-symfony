@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand navbar-light bg-light border-bottom">
+    <nav class="container">
+        {% if app.user and (base is same as 'base' or base is same as 'base-gestion-projet')  %}
+        <div class="menu-toggler" title="Ouvrir le menu">
+            <i class="fa fa-bars"></i>
+        </div>
+        {% endif %}
+        <a class="navbar-brand pt-1" href="{{ path('accueil_index') }}">
+            <span class="app-name-namas font-weight-bold">Namas</span><span class="app-name-test font-weight-bold">Test</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto px-1 ">
+                <li class="nav-item"><a class="nav-link" href="{{ path('aide') }}">Documentation</a></li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown px-3 ">
+                    <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Contactez-nous
+                    </a>
+                    <div class="dropdown-menu dropdown-menu" aria-labelledby="contactDropdown">
+                        <a class="dropdown-item" href="{{ path('support') }}">Support Technique</a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item" href="{{ path('question_generale') }}">Question Générale</a>
+                    </div>
+                </li>
+
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="btn btn-primary rounded-circle py-2" href="#" id="profilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ app.user.prenom|first }}{{ app.user.nom|first }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profilDropdown">
+                            <li><a class="dropdown-item" href="{{ path('projet_liste') }}">Projets</a></li>
+                            <li><a class="dropdown-item" href="{{ path('utilisateur_modifier') }}">Gérer son profil</a></li>
+                            {% if app.user.isAdministrateur %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ path('admin') }}">Administration</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <div class="nav-items-responsive ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                        </li>
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</nav>

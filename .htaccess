@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{THE_REQUEST} /public/index.php([^\s?]*) [NC]
+RewriteRule ^ %1 [L,NE,R=302]
+ 
+RewriteRule ^(.*)$ public/$1 [L,NC]

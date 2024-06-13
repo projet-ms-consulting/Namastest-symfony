@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% form_theme formulaireTemplateTest 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}
+    Créer un cas de test {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container col-12 col-md-10">
+        <h1 class="text-center m-3">Créer un cas de test</h1>
+        {{ form_start(formulaireTemplateTest) }}
+        {{ form_widget(formulaireTemplateTest) }}
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Créer
+        </button>
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+        {{ form_end(formulaireTemplateTest) }}
+    </div>
+{% endblock %}
+

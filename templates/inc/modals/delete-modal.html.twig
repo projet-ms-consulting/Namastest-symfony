@@ -1,0 +1,26 @@
+{#
+    Le bouton appelant le modal doit obligatoirement comporter ces attributs:
+        data-bs-toggle="modal"
+        data-bs-target="#deleteModal"
+        data-bs-type="(exemple: le projet, le catalogue, le template, ...)"
+        data-bs-name="(le nom ou libellé de l'élément à supprimer)"
+        data-bs-id="(l'id de l'élément à supprimer)"
+        data-bs-path="(le path vers la méthode du contrôleur à appeler)"
+#}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes vous sûr de vouloir supprimer <span class="type"></span> &ldquo;<strong class="name"></strong>&rdquo; ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger confirmBtn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+{% extends 'base-inscription-connexion.html.twig' %}
+
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block body %}
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    <div class="reset-password container-reset-password">
+        <h1>Réinitialiser votre mot de passe</h1>
+        <img class="logo-reset-password" src="{{ asset('img/Logo_App.png') }}" alt="logo Namastest">
+        {{ form_start(requestForm) }}
+            {{ form_row(requestForm.email) }}
+            <div>
+                <small>
+                    Entrez votre adresse e-mail, vous allez recevoir un lien de réinitialisation de votre mot de passe dans quelques instants.
+                </small>
+            </div>
+
+            <button class="btn btn-lg btn-tres-fonce text-color-white">Envoyer l'email</button>
+        {{ form_end(requestForm) }}
+    </div>
+{% endblock %}

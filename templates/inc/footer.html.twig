@@ -1,0 +1,38 @@
+<footer class="navbar-light bg-light mt-auto p-4 border-top">
+    <div class="footer container">
+        <img src="{{ asset('img/Logo_App_With_NT.png') }}" alt="Logo Namastest">
+        <div class="footer-margin-right">
+            <span class="navbar-text fw-bold">
+                &copy; <span class="app-name-namas">Namas</span><span class="app-name-test">Test</span> - {{ "now"| date('Y') }}
+            </span>
+            <hr>
+            <p>Un outil de gestion de test ergonomique</p>
+            <p class="mb-4">qui vous accompagne jusqu'au lancement de votre produit</p>
+        </div>
+        <div class="footer-margin-right">
+            <span>Menu de l'application</span>
+            <hr>
+            <div class="d-flex flex-column">
+                <a href="{{ path('app_login') }}">Se connecter</a>
+                <a href="{{ path('app_register') }}">S'inscrire</a>
+                <a class="mb-4" href="{{ path('aide') }}">Documentation</a>
+            </div>
+        </div>
+        <div class="footer-margin-right">
+            <span>Conditions</span>
+            <hr>
+            <div class="d-flex flex-column">
+                <a href="{{ path('mentions_legales') }}" target="_blank">Mentions légales</a>
+                <a class="mb-4" href="{{ path('cgu-rgpd') }}" target="_blank">CGU & RGPD</a>
+            </div>
+        </div>
+        <div class="footer-margin-right">
+            <span>Contactez-nous</span>
+            <hr>
+            <div class="d-flex flex-column">
+                <a href="{{ path('support') }}">Support Technique</a>
+                <a href="{{ path('question_generale') }}">Question Générale</a>
+            </div>
+        </div>
+    </div>
+</footer>

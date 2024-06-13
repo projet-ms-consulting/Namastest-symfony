@@ -1,0 +1,59 @@
+{% extends 'base-inscription-connexion.html.twig' %}
+
+{% block title %}Se connecter {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="col-12 col-md-12 col-lg-8 offset-lg-2 form-register">
+        <div class="col-md-6  logo-register ">
+            <h1 class="text-center">Se connecter</h1>
+            <p>Vous avez déjà un espace client ?</p>
+            <p>Ravi de vous revoir !</p>
+            <img src="{{ asset('img/Logo_App_With_NT.png') }}" alt="Namastest">
+        </div>
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">Identifiants incorects !</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    Vous êtes connecté en tant que {{ app.user.fullName }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                </div>
+            {% else %}
+
+                <label for="inputEmail">Email</label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                <label for="inputPassword" id="mdp-input">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}"
+                >
+
+                {#
+                Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                See https://symfony.com/doc/current/security/remember_me.html
+                #}
+                <div class="d-flex checkboxes-login">
+                    <input type="checkbox" value="false" id="show-login-password">
+                    <label for="show-login-password">Montrer le mot de passe</label>
+                </div>
+                <div class="checkbox mb-3 d-flex checkboxes-login">
+                        <input type="checkbox" id="remember-me" name="_remember_me">
+                        <label for="remember-me">Se souvenir de moi</label>
+                </div>
+                <div class="login-reset-password">
+                    <a class="text-color-white" href="{{ path('app_forgot_password_request') }}" title="Reset password">Mot de passe oublié ?</a>
+                </div>
+
+                <button class="btn btn-lg mt-4 btn-primary" type="submit">
+                    Se connecter
+                </button>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/utils/togglePasswordLoginVisibility.js') }}"></script>
+{% endblock %}

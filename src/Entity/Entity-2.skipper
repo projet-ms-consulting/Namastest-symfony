@@ -1,0 +1,518 @@
+<?xml version="1.0"?>
+<skipper version="3.2.35.1768" mvc="Symfony" orm="Doctrine2" name="Entity" uuid="0fb4d3a9-99f2-4e7f-ba69-7f0009629b34">
+  <module name="\Module" local-name="Module" namespace="\App\Entity" local-namespace="\App\Entity" export-format="Doctrine2Php" export-path="." uuid="792f88a6-ee4f-48cd-83e5-3960812b0d2c">
+    <entity name="\App\Entity\RoleDroit" local-name="RoleDroit" namespace="\App\Entity" uuid="d9931e9e-3e60-49d1-b98a-b17845425237">
+      <field name="Role_id" type="integer" uuid="2d996dc4-754e-47b1-97a8-0345947be230"/>
+      <field name="Droit_id" type="integer" uuid="65d15195-8ff3-4da6-8c46-21491033de2f"/>
+    </entity>
+    <many-to-many mn-entity="\App\Entity\RoleDroit" uuid="92ec8002-d59d-46e6-a8f7-24bb7ec73f5e">
+      <many-to-many-entity name="\App\Entity\Role" owning-side="true" alias="roles" uuid="46f69886-a76a-42a9-9fd0-0fd2c94ddfbb">
+        <many-to-many-field from="Role_id" to="id" uuid="0e940ef1-a6cf-4c16-9c11-901da801aa6a"/>
+      </many-to-many-entity>
+      <many-to-many-entity name="\App\Entity\Droit" owning-side="false" alias="droits" uuid="9b9f8330-58cf-4df5-b714-090a1637a454">
+        <many-to-many-field from="Droit_id" to="id" uuid="ee43497f-bf65-4b7b-a880-7cdedd80f179"/>
+      </many-to-many-entity>
+    </many-to-many>
+    <entity name="\App\Entity\Campagne" local-name="Campagne" namespace="\App\Entity" uuid="300c4489-bdda-42ef-9886-186f49ebfafe">
+      <field name="id" type="integer" required="true" primary="true" uuid="0392c92d-45e7-4b15-98a9-0c2d9294963b">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="nom" type="string" size="128" required="true" uuid="6e1f2d29-4424-4508-8d89-593e9fbb9e8a"/>
+      <field name="description" type="text" uuid="6d0fe050-3144-4ae9-a57d-9521f97512a3"/>
+      <field name="dateDebutEstimee" type="datetime" uuid="9bba53dc-7813-4030-b69d-a54beee6fab3"/>
+      <field name="dateFinEstimee" type="datetime" uuid="fa6b23d4-2a1a-45fd-a2ae-bb3b471f23e3"/>
+      <field name="dateDebutReelle" type="datetime" uuid="ffafb63f-5755-47e4-b75f-7922957d902a"/>
+      <field name="dateFinReelle" type="datetime" uuid="662f5669-7c0b-4dfd-8827-a8a24960823a"/>
+      <field name="data" type="array" uuid="f84ec39e-3ee6-4565-905e-1e20801929ad"/>
+      <field name="projet_id" required="true" uuid="ff0bbbd3-49cd-4cbf-b6d9-fa9abbdd9ad5"/>
+      <field name="etat_id" required="true" uuid="1a040b8a-aa5b-48ff-82fb-e4d5f97cfa91"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\CampagneRepository</attribute>
+        <attribute name="export-file-name">Campagne.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Campagne" to="\App\Entity\Projet" owner-alias="campagnes" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="df7f1f5b-854a-4bb9-97c6-2f28f596f716">
+      <association-field from="projet_id" to="id" uuid="8b47a54f-b49c-4fb6-b9df-b1b27ba6af7f"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\Campagne" to="\App\Entity\EtatCampagne" owner-alias="" inverse-alias="etat" many-owner="true" many-inverse="false" parent-required="true" uuid="176d3301-f5fb-4757-9fe3-cbfb00daf65f">
+      <association-field from="etat_id" to="id" uuid="17c3f3e0-69b0-4a72-8b1c-ae012cb64c93"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Catalogue" local-name="Catalogue" namespace="\App\Entity" uuid="c667fced-7039-46d8-9548-b0677a25d6c6">
+      <field name="id" type="integer" required="true" primary="true" uuid="aac39833-79f6-4a20-b70c-1b5879dadebe">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="libelle" type="string" size="128" required="true" uuid="130a3d0e-caae-4fc6-b852-a84d69abe017"/>
+      <field name="projet_id" required="true" uuid="dd851583-8f81-440c-9696-8be166e04b92"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\CatalogueRepository</attribute>
+        <attribute name="export-file-name">Catalogue.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Catalogue" to="\App\Entity\Projet" owner-alias="catalogues" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="1959e1cd-c8b2-4ab3-aa36-12f9a9c37b95">
+      <association-field from="projet_id" to="id" uuid="731e0dba-df39-4c05-8b01-833ac54570d0"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Droit" local-name="Droit" namespace="\App\Entity" uuid="006afb86-b27f-43e9-90d3-46406d6e6a6b">
+      <field name="id" type="integer" required="true" primary="true" uuid="13015e0d-b083-4c18-9fa7-a69e6a2d0039">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="libelle" type="string" size="128" required="true" uuid="bd8324ce-f21a-4c55-9afc-6f538d0455d3"/>
+      <field name="code" type="string" size="8" required="true" uuid="323cf4de-b2ae-4b82-98aa-940b0127ea99"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\DroitRepository</attribute>
+        <attribute name="export-file-name">Droit.php</attribute>
+      </orm-attributes>
+    </entity>
+    <entity name="\App\Entity\EtatCampagne" local-name="EtatCampagne" namespace="\App\Entity" uuid="cd3795ee-2a2f-46d7-93db-ac3cbe66d876">
+      <field name="id" type="integer" required="true" primary="true" uuid="103d0c7e-b6c5-41bf-9dc4-c4290717ecd4">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="libelle" type="string" size="32" required="true" uuid="7890e9c6-dc34-4f8f-8630-69068922ce7e"/>
+      <field name="isEnPrep" type="boolean" required="true" uuid="c2eff14c-f893-48b7-8fac-c71bd6f27f0a"/>
+      <field name="isEnCours" type="boolean" required="true" uuid="4c4f7a56-dd30-45d8-a66b-5d0599ee6ea4"/>
+      <field name="isCloturee" type="boolean" required="true" uuid="0bc975a8-57e0-4431-b7c9-59357476d69a"/>
+      <field name="projet_id" required="true" uuid="3bbafea0-8ef7-4b55-8fb0-fe32532137c7"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\EtatCampagneRepository</attribute>
+        <attribute name="export-file-name">EtatCampagne.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\EtatCampagne" to="\App\Entity\Projet" owner-alias="etatsCampagne" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="7a565d3e-5226-4dc8-9499-60f4d053fa6a">
+      <association-field from="projet_id" to="id" uuid="2c938ce5-8bed-496e-8c0d-a3dbd4e2cc02"/>
+      <orm-attributes>
+        <attribute name="side-owning">
+          <attribute name="cascade">
+            <attribute name="cascade-persist">true</attribute>
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\EtatTest" local-name="EtatTest" namespace="\App\Entity" uuid="c7ccc68d-de2c-4177-91bc-e8d32777fc74">
+      <field name="id" type="integer" required="true" primary="true" uuid="f24b140f-3195-466e-853f-2a40d146dae9">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="libelle" type="string" size="32" required="true" uuid="fc804494-a65b-4980-8566-0e9ea95afac6"/>
+      <field name="isATester" type="boolean" required="true" uuid="b2ecb10f-9fbe-413c-bfe9-511c734df726"/>
+      <field name="isOK" type="boolean" required="true" uuid="372006c8-a39f-42ac-add9-7ee3785bc022"/>
+      <field name="isKO" type="boolean" required="true" uuid="3c092601-b72b-4c82-ab44-8b6dc65a3b8f"/>
+      <field name="projet_id" required="true" uuid="b8c07cbc-c55b-4c67-b5a6-6682f7ee3660"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\EtatTestRepository</attribute>
+        <attribute name="export-file-name">EtatTest.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\EtatTest" to="\App\Entity\Projet" owner-alias="etatsTests" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="d32e9275-bf25-4402-8164-fcaf706df6e4">
+      <association-field from="projet_id" to="id" uuid="226a16d3-6aba-4a75-b3d8-d87072477e9d"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Invitation" local-name="Invitation" namespace="\App\Entity" uuid="4aaed18d-3a53-4471-aa0f-1cfaf6a84bd4">
+      <field name="id" type="integer" required="true" primary="true" uuid="d0883226-6603-47e6-8560-cb859855e2b0">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="destinataire" type="string" size="180" required="true" uuid="b71265d0-90ce-45be-87bc-9b8ac7ca4ac9"/>
+      <field name="etat" type="smallint" required="true" uuid="4bade8c3-dc4c-4492-9fdd-e2701fab17e5"/>
+      <field name="dateEnvoi" type="datetime" required="true" uuid="fc6aaaba-285f-422d-9cfc-f361f1097281"/>
+      <field name="dateChoix" type="datetime" uuid="d1f0d8f6-61cb-4ff9-8f03-2241655b59a3"/>
+      <field name="auteur_id" required="true" uuid="4ef56aaa-5dc0-4f80-943c-aa3e457d6299"/>
+      <field name="projet_id" required="true" uuid="ae484153-40ca-49d6-bec3-4a28a1a6f0e6"/>
+      <field name="role_id" required="true" uuid="eba4b24c-6ba8-480f-8679-841bc624c604"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\InvitationRepository</attribute>
+        <attribute name="export-file-name">Invitation.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Invitation" to="\App\Entity\Utilisateur" owner-alias="invitations" inverse-alias="auteur" many-owner="true" many-inverse="false" parent-required="true" uuid="ba1216d8-dd07-4614-84e1-5e00845f4533">
+      <association-field from="auteur_id" to="id" uuid="966bd373-53ab-40f0-81fa-fe1b26c52aa4"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\Invitation" to="\App\Entity\Projet" owner-alias="invitations" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="15b0d629-1913-4e28-8d81-87d15e0d8cc3">
+      <association-field from="projet_id" to="id" uuid="562c588e-2f02-4ddd-b332-3e66d6e9910e"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\Invitation" to="\App\Entity\Role" owner-alias="" inverse-alias="role" many-owner="true" many-inverse="false" parent-required="true" uuid="aa7ccbed-8cb7-4eef-823e-b52e9e1bc2d2">
+      <association-field from="role_id" to="id" uuid="3bf7bd80-d8f8-4751-8e9b-7254e7754ee3"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\ParticipantProjet" local-name="ParticipantProjet" namespace="\App\Entity" uuid="6d9f2975-2dc5-4508-aabe-abea6754987d">
+      <field name="id" type="integer" required="true" primary="true" uuid="cc1c3f79-2585-4dc4-92d4-547170b7d912">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="utilisateur_id" required="true" uuid="800ac6ad-5580-426e-b422-3d45806e10de"/>
+      <field name="projet_id" required="true" uuid="481d2c5b-b504-4b13-aae2-1e7bca0d7d9d"/>
+      <field name="role_id" required="true" uuid="1efa08c6-eeff-4838-bbbd-c04b3f0d543b"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\ParticipantProjetRepository</attribute>
+        <attribute name="export-file-name">ParticipantProjet.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\ParticipantProjet" to="\App\Entity\Utilisateur" owner-alias="participantProjets" inverse-alias="utilisateur" many-owner="true" many-inverse="false" parent-required="true" uuid="199d8de1-d9e5-43f2-ac11-eba2910258f6">
+      <association-field from="utilisateur_id" to="id" uuid="89227216-c6c9-4c20-a917-7784d2f0badf"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\ParticipantProjet" to="\App\Entity\Projet" owner-alias="participantsProjet" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="056aad0c-bf2a-43a2-ae44-ab5efd73999a">
+      <association-field from="projet_id" to="id" uuid="f4d27352-bf85-4fba-a3af-949aad754949"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\ParticipantProjet" to="\App\Entity\Role" owner-alias="" inverse-alias="role" many-owner="true" many-inverse="false" parent-required="true" uuid="891c8e62-0069-4dd0-a889-8cb26d172783">
+      <association-field from="role_id" to="id" uuid="add8d07b-a21d-4e33-a144-304bd16eaa5e"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Projet" local-name="Projet" namespace="\App\Entity" uuid="25afce28-a595-4f49-a4c3-e1a57ea31425">
+      <field name="id" type="integer" required="true" primary="true" uuid="099f803c-b56e-4b16-b715-95485cc3e603">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="nom" type="string" size="128" required="true" uuid="ffd90d41-e365-45b8-b1c5-60b24fa487db"/>
+      <field name="dateCreation" type="datetime" required="true" uuid="258b0a59-7413-488b-b3d8-7c00a0d6b7de"/>
+      <field name="auteur_id" required="true" uuid="4f60fda2-7933-4e31-b35a-19c6811c902f"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\ProjetRepository</attribute>
+        <attribute name="export-file-name">Projet.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Projet" to="\App\Entity\Utilisateur" owner-alias="projets" inverse-alias="auteur" many-owner="true" many-inverse="false" parent-required="true" uuid="c228bddf-523a-4d37-b511-24f0731f64d5">
+      <association-field from="auteur_id" to="id" uuid="9c976385-c323-42f1-b403-ea8cba51fa59"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\ResetPasswordRequest" local-name="ResetPasswordRequest" namespace="\App\Entity" uuid="cfef20ba-d577-4a83-8ff2-128d2c26a9ad">
+      <field name="id" type="integer" required="true" primary="true" uuid="8d836be1-ac15-45ec-8406-39e8706a2f8b">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="user_id" required="true" uuid="c6656adb-4eaf-4fe7-a6dc-c078ea95f664"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\ResetPasswordRequestRepository</attribute>
+        <attribute name="export-file-name">ResetPasswordRequest.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\ResetPasswordRequest" to="\App\Entity\Utilisateur" owner-alias="" inverse-alias="user" many-owner="true" many-inverse="false" parent-required="true" uuid="6e07e647-0252-4776-a09a-c4356553d5c8">
+      <association-field from="user_id" to="id" uuid="d01ec2fb-233d-4b4b-b3f2-4edc0ab3f704"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Role" local-name="Role" namespace="\App\Entity" uuid="346e6acf-503e-4b4b-821f-158ba5aa5f98">
+      <field name="id" type="integer" required="true" primary="true" uuid="37e430ff-26cf-4416-9101-b53773b9f384">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="libelle" type="string" size="64" required="true" uuid="313ed1d0-f828-46d9-9884-25ae22ee49b1"/>
+      <field name="projet_id" required="true" uuid="9b8346fb-2ad9-400e-8e34-d0235e82872d"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\RoleRepository</attribute>
+        <attribute name="export-file-name">Role.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Role" to="\App\Entity\Projet" owner-alias="roles" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="fed1e6bb-718b-414b-b167-7e00456c56fc">
+      <association-field from="projet_id" to="id" uuid="99c63611-675e-4d3f-9efe-0e08f76e554c"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\TemplateCatalogueRelation" local-name="TemplateCatalogueRelation" namespace="\App\Entity" uuid="3eb426c6-0585-4244-8a99-e7dc7963a645">
+      <field name="id" type="integer" required="true" primary="true" uuid="5eba95b1-d7e9-4154-90cf-c770c3366657">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="ordre" type="integer" required="true" uuid="bdee225c-2fb5-4776-b15a-4f52eabbe08b"/>
+      <field name="template_id" required="true" uuid="c482ed3c-90a2-4cfc-987e-ee9f1cdd3f2e"/>
+      <field name="catalogue_id" required="true" uuid="baa50a32-f6fa-43c7-8eb1-0c0ec33173fd"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\TemplateCatalogueRelationRepository</attribute>
+        <attribute name="export-file-name">TemplateCatalogueRelation.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\TemplateCatalogueRelation" to="\App\Entity\TemplateTest" owner-alias="templateCatalogueRelation" inverse-alias="template" many-owner="true" many-inverse="false" parent-required="true" uuid="d9ced562-96dd-4480-a426-597b58dd986f">
+      <association-field from="template_id" to="id" uuid="6ace198d-4299-4bde-8f02-50d0e8b27ff9"/>
+      <orm-attributes>
+        <attribute name="side-owning">
+          <attribute name="cascade">
+            <attribute name="cascade-persist">true</attribute>
+          </attribute>
+        </attribute>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-persist">true</attribute>
+          </attribute>
+          <attribute name="order-by">
+            <attribute name="order-by-field">
+              <attribute name="field">ordre</attribute>
+              <attribute name="direction">DESC</attribute>
+            </attribute>
+          </attribute>
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\TemplateCatalogueRelation" to="\App\Entity\Catalogue" owner-alias="templateCatalogueRelation" inverse-alias="catalogue" many-owner="true" many-inverse="false" parent-required="true" uuid="4c8de9f4-ef80-42b5-a15d-ac595297c124">
+      <association-field from="catalogue_id" to="id" uuid="bcbfa205-518d-49d6-aeb7-b617ae8b9501"/>
+      <orm-attributes>
+        <attribute name="side-owning">
+          <attribute name="cascade">
+            <attribute name="cascade-persist">true</attribute>
+          </attribute>
+        </attribute>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-persist">true</attribute>
+          </attribute>
+          <attribute name="order-by">
+            <attribute name="order-by-field">
+              <attribute name="field">ordre</attribute>
+              <attribute name="direction">DESC</attribute>
+            </attribute>
+          </attribute>
+          <attribute name="orphan-removal">true</attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\TemplateTest" local-name="TemplateTest" namespace="\App\Entity" uuid="63ba57d5-4d18-40ca-b38b-f89a3dbd5c35">
+      <field name="id" type="integer" required="true" primary="true" uuid="58a06132-9717-4092-9fb0-48b61ba83843">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="nom" type="string" size="128" required="true" uuid="aa6a45e8-2c4e-498f-b990-7097c9803e39"/>
+      <field name="description" type="text" uuid="5aed239f-a5b0-468c-9dc8-00828f62d77a"/>
+      <field name="dateCreation" type="datetime" required="true" uuid="3523cc71-86c6-4718-9a35-54bad4c33a36"/>
+      <field name="version" type="integer" required="true" uuid="096d8329-b2d2-46af-8730-1924879977b8"/>
+      <field name="position" type="integer" required="true" uuid="f2283f46-4aaf-43ef-8f36-3eaaad827f8b"/>
+      <field name="projet_id" required="true" uuid="396fcca4-a887-4d33-b9d2-47e5f4c261b4"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\TemplateTestRepository</attribute>
+        <attribute name="export-file-name">TemplateTest.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\TemplateTest" to="\App\Entity\Projet" owner-alias="templates" inverse-alias="projet" many-owner="true" many-inverse="false" parent-required="true" uuid="fbdffe60-4e44-4142-9d5d-d62f364a5a71">
+      <association-field from="projet_id" to="id" uuid="21cd5504-2bd2-4366-b93c-b5ce0418f23b"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Test" local-name="Test" namespace="\App\Entity" uuid="63e786b8-74ff-4d91-b11a-dfb291b7a62f">
+      <field name="id" type="integer" required="true" primary="true" uuid="bfbdfc57-137d-4eba-9c5e-bc468e382e23">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="nom" type="string" size="128" uuid="a83e879b-a02b-43f0-9b92-2ebecf433f72"/>
+      <field name="description" type="text" uuid="216a6f42-8eb3-4717-aa91-6ed42ec2fb42"/>
+      <field name="ordre" type="integer" uuid="0eae8e45-a1dc-4dce-806f-e5ec136c325b"/>
+      <field name="precisionsResultat" type="text" uuid="5148ffa6-422a-4aa0-9497-a9b4988bd1c3"/>
+      <field name="campagne_id" required="true" uuid="ea5ed530-0392-47fd-a329-3e9fd4cf93a2"/>
+      <field name="etat_id" required="true" uuid="2d1642b0-2cca-475d-b648-fa68ed9e5ff2"/>
+      <field name="template_id" uuid="e8a03fa2-eb34-4779-9af9-8f9de56fb07a"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\TestRepository</attribute>
+        <attribute name="export-file-name">Test.php</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\App\Entity\Test" to="\App\Entity\Campagne" owner-alias="tests" inverse-alias="campagne" many-owner="true" many-inverse="false" parent-required="true" uuid="613d80aa-3b95-41aa-be76-4ff69041f087">
+      <association-field from="campagne_id" to="id" uuid="b94aa471-7b1a-44d5-b8a9-e8cd789798c5"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse">
+          <attribute name="cascade">
+            <attribute name="cascade-remove">true</attribute>
+          </attribute>
+        </attribute>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\Test" to="\App\Entity\EtatTest" owner-alias="" inverse-alias="etat" many-owner="true" many-inverse="false" parent-required="true" uuid="6261a6ef-336f-4b9a-b686-75096ad66e4e">
+      <association-field from="etat_id" to="id" uuid="62e71c15-f81e-45a1-9c2a-399f3938d44d"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <association from="\App\Entity\Test" to="\App\Entity\TemplateTest" owner-alias="tests" inverse-alias="template" many-owner="true" many-inverse="false" uuid="8ecbe58b-2d29-460a-90dc-5665dea4e81f">
+      <association-field from="template_id" to="id" uuid="dac7aba3-07ea-4a12-af8a-82ac782f09f1"/>
+      <orm-attributes>
+        <attribute name="side-owning"/>
+        <attribute name="side-inverse"/>
+      </orm-attributes>
+    </association>
+    <entity name="\App\Entity\Utilisateur" local-name="Utilisateur" namespace="\App\Entity" uuid="cf1847ee-a07b-44e4-a6b8-876c010c70e4">
+      <field name="id" type="integer" required="true" primary="true" uuid="716f3fb8-09ee-4629-b95b-500622ee19f3">
+        <orm-attributes>
+          <attribute name="generator">
+            <attribute name="strategy">AUTO</attribute>
+          </attribute>
+        </orm-attributes>
+      </field>
+      <field name="nom" type="string" size="64" required="true" uuid="f6b17b75-a080-4a9c-874a-72788a44ea53"/>
+      <field name="prenom" type="string" size="64" required="true" uuid="efdac9a7-9531-4c9a-ac34-cd2ae898cd3e"/>
+      <field name="email" type="string" size="180" required="true" unique="true" uuid="fa64ae04-1428-4499-88b6-a8accfe087ba"/>
+      <field name="roles" type="json" required="true" uuid="e8842346-2bd3-4d67-9dba-195e5f361a3b"/>
+      <field name="password" type="string" required="true" uuid="5d0f4869-a1ee-490c-b304-e46fc10a1077"/>
+      <field name="dateInscription" type="datetime" required="true" uuid="cdc2a968-4ab8-40ab-901f-45fb52c1e62d"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Entity\UtilisateurRepository</attribute>
+        <attribute name="export-file-name">Utilisateur.php</attribute>
+      </orm-attributes>
+    </entity>
+  </module>
+  <visual-data>
+    <association uuid="056aad0c-bf2a-43a2-ae44-ab5efd73999a" center-position-x="0" center-position-y="0" color="#A8A8A8"/>
+    <association uuid="15b0d629-1913-4e28-8d81-87d15e0d8cc3" color="#8A54A2"/>
+    <association uuid="176d3301-f5fb-4757-9fe3-cbfb00daf65f" color="#61D351"/>
+    <association uuid="1959e1cd-c8b2-4ab3-aa36-12f9a9c37b95" color="#CDC32B"/>
+    <association uuid="199d8de1-d9e5-43f2-ac11-eba2910258f6" color="#00B4D0"/>
+    <association uuid="4c8de9f4-ef80-42b5-a15d-ac595297c124" color="#C774AF"/>
+    <association uuid="613d80aa-3b95-41aa-be76-4ff69041f087" color="#2E63AF"/>
+    <association uuid="6261a6ef-336f-4b9a-b686-75096ad66e4e" color="#00B4D0"/>
+    <association uuid="6e07e647-0252-4776-a09a-c4356553d5c8" color="#CDC32B"/>
+    <association uuid="7a565d3e-5226-4dc8-9499-60f4d053fa6a" color="#F4931F"/>
+    <association uuid="891c8e62-0069-4dd0-a889-8cb26d172783" color="#0A783D"/>
+    <association uuid="8ecbe58b-2d29-460a-90dc-5665dea4e81f" color="#A8A8A8"/>
+    <association uuid="aa7ccbed-8cb7-4eef-823e-b52e9e1bc2d2" color="#2E63AF"/>
+    <association uuid="ba1216d8-dd07-4614-84e1-5e00845f4533" color="#C774AF"/>
+    <association uuid="c228bddf-523a-4d37-b511-24f0731f64d5" color="#61D351"/>
+    <association uuid="d32e9275-bf25-4402-8164-fcaf706df6e4" color="#B31F24"/>
+    <association uuid="d9ced562-96dd-4480-a426-597b58dd986f" color="#B31F24"/>
+    <association uuid="df7f1f5b-854a-4bb9-97c6-2f28f596f716" color="#0A783D"/>
+    <association uuid="fbdffe60-4e44-4142-9d5d-d62f364a5a71" color="#8A54A2"/>
+    <association uuid="fed1e6bb-718b-414b-b167-7e00456c56fc" color="#F4931F"/>
+    <entity uuid="006afb86-b27f-43e9-90d3-46406d6e6a6b" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="838" position-y="370" size-x="0" size-x2="101" size-y="0" size-y2="59"/>
+    <entity uuid="25afce28-a595-4f49-a4c3-e1a57ea31425" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="387" position-y="14" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
+    <entity uuid="300c4489-bdda-42ef-9886-186f49ebfafe" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="61" position-y="111" size-x="0" size-x2="147" size-y="0" size-y2="157"/>
+    <entity uuid="346e6acf-503e-4b4b-821f-158ba5aa5f98" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="841" position-y="19" size-x="0" size-x2="96" size-y="0" size-y2="59"/>
+    <entity uuid="3eb426c6-0585-4244-8a99-e7dc7963a645" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="265" position-y="554" size-x="0" size-x2="131" size-y="0" size-y2="73"/>
+    <entity uuid="4aaed18d-3a53-4471-aa0f-1cfaf6a84bd4" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="684" position-y="131" size-x="0" size-x2="126" size-y="0" size-y2="129"/>
+    <entity uuid="63ba57d5-4d18-40ca-b38b-f89a3dbd5c35" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="376" position-y="664" size-x="0" size-x2="123" size-y="0" size-y2="115"/>
+    <entity uuid="63e786b8-74ff-4d91-b11a-dfb291b7a62f" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="-92" position-y="614" size-x="0" size-x2="127" size-y="0" size-y2="129"/>
+    <entity uuid="6d9f2975-2dc5-4508-aabe-abea6754987d" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="577" position-y="-66" size-x="0" size-x2="84" size-y="0" size-y2="73"/>
+    <entity uuid="c667fced-7039-46d8-9548-b0677a25d6c6" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="282" position-y="459" size-x="0" size-x2="101" size-y="0" size-y2="59"/>
+    <entity uuid="c7ccc68d-de2c-4177-91bc-e8d32777fc74" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="194" position-y="306" size-x="0" size-x2="103" size-y="0" size-y2="101"/>
+    <entity uuid="cd3795ee-2a2f-46d7-93db-ac3cbe66d876" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="-68" position-y="98" size-x="0" size-x2="109" size-y="0" size-y2="101"/>
+    <entity uuid="cf1847ee-a07b-44e4-a6b8-876c010c70e4" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="555" position-y="288" size-x="0" size-x2="131" size-y="0" size-y2="115"/>
+    <entity uuid="cfef20ba-d577-4a83-8ff2-128d2c26a9ad" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="563" position-y="460" size-x="0" size-x2="114" size-y="0" size-y2="45"/>
+    <entity uuid="d9931e9e-3e60-49d1-b98a-b17845425237" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="842" position-y="225" size-x="0" size-x2="94" size-y="0" size-y2="60"/>
+    <many-to-many-association uuid="92ec8002-d59d-46e6-a8f7-24bb7ec73f5e" color="#0A783D"/>
+    <module uuid="792f88a6-ee4f-48cd-83e5-3960812b0d2c" bg-color="#FEFCE8" position-x="50" position-y="50" size-x="137" size-x2="991" size-y="96" size-y2="857"/>
+    <project uuid="0fb4d3a9-99f2-4e7f-ba69-7f0009629b34" size-x="137" size-x2="1091" size-y="96" size-y2="957"/>
+  </visual-data>
+</skipper>

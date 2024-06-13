@@ -1,0 +1,159 @@
+{% extends 'base-vitrine.html.twig' %}
+
+{% block title %}Les différents packs pour Namastest{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/radouanCss.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block body %}
+
+
+    <article class="vitrine-namastest-atouts article-freemium">
+        <div class="vitrine-namastest-title title-page-freemium">
+            <h2 class="h2-freemium">Nos formules</h2>
+        </div>
+        <div class="atouts atouts-freemium">
+            <div class="vitrine-card-atouts card-size">
+                {#                <div class="carreFl"><p class="cards-atouts-title">Fre</p></div>#}
+                <div class="card-center">
+                    <h3>Freemium</h3>
+                    <p>La version Freenium permet une utilisation basique de Namastest. (Voir tableau ci-dessous)</p>
+                    {#                    <i class="fab fa-centos fa-5x"></i>#}
+                </div>
+            </div>
+            <div class="vitrine-card-atouts card-size">
+                {#                <div class="carreQU"><p class="cards-atouts-title">Pre</p></div>#}
+                <div class="card-center">
+                    <h3>Pro</h3>
+                    <p>La version Pro permet une utilisation plus poussée de Namastest en offrant quelques fonctionnalités en plus. (Voir tableau ci-dessous)</p>
+                    {#                    <i class="far fa-calendar-check fa-5x"></i>#}
+                </div>
+            </div>
+            <div class="vitrine-card-atouts card-size">
+                {#                <div class="carrePF"><p class="cards-atouts-title">Pro</p></div>#}
+                <div class="card-center">
+                    <h3>Premium</h3>
+                    <p>La version Prenium permet une utilisaiton complète de Namastest en donnant accès à toutes les fonctionnalités disponibles. (Voir tableau ci-dessous)</p>
+                    {#                    <i class="fas fa-chart-line fa-5x"></i>#}
+                </div>
+            </div>
+        </div>
+    </article>
+
+    {#*******************************************************************************************************************#}
+
+
+    {#    FONCTIONNELL Ne pas toucher #}
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Version</th>
+
+            <th scope="col" class="text-center">Freemium</th>
+            <th scope="col" class="text-center" >Pro</th>
+            <th scope="col" class="text-center">Premium</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">Création de test</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Ordonner l'ordre des tests</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Ajout d'un commentaire/note sur un cas de test</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Création de catalogue</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Affichage du détail du template de test</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Suppression d'un cas de test du catalogue</th>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Renommer un projet</th>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Importation de cas de test via Excel</th>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Modification d'un cas de test</th>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Mise en forme du texte de description d'une description d'un cas de test</th>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Inclure une pièce jointe</th>
+            <td></td>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Gestion des invitations au projet</th>
+            <td></td>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Dupliquer un cas de test</th>
+            <td></td>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        <tr>
+            <th scope="row">Exportation via Excel</th>
+            <td></td>
+            <td></td>
+            <td><img class="logo-tableau-validation" src="{{ asset('img/Logo_App.png') }}" alt=""></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th scope="col">Prix</th>
+            <th scope="col" class="text-center">Freemium</th>
+            <th scope="col" class="text-center">24.99€</th>
+            <th scope="col" class="text-center">49.99€</th>
+        </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+{% endblock %}
+

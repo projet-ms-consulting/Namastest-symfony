@@ -1,0 +1,16 @@
+{% extends 'base-vitrine.html.twig' %}
+{% block title %}
+    Erreur {{ parent() }}
+{% endblock %}
+{% block body %}
+    <div class="error-pages">
+        <h1>Page introuvable</h1>
+        <img src="{{ asset('img/Logo_App_With_NT.png') }}" alt="Logo NamasTest">
+        <p>
+            Erreur
+            La page demandée n'a pas pu être localisée. Vérifiez l'URL, une erreur a été commise
+            (faute d'orthographe...)
+        </p>
+        <p><a class="vitrine-links" href="{{ path('accueil_index') }}">revenir à la page d'accueil</a></p>
+    </div>
+{% endblock %}

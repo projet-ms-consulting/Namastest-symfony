@@ -1,0 +1,132 @@
+{% extends 'base-vitrine.html.twig' %}
+
+{% block title %}Outil de gestion de tests {{ parent() }}{% endblock %}
+{#  todo : créer des animations concernant le logo (sur un nuage avec quelques daut et les ailes qui bougent)
+    todo : créer une animations avec des bulles qui se déplacent sur les cards atouts
+    todo : créer une animation sur les fleurs du cerisier afin d'ajouter un effet de vent
+    todo : mettre en place un effet d'animation sur la globalité des éléments pour faire une apparition on scroll voir la vidéo de grafikart
+#}
+
+{% block body %}
+    <article class="vitrine-namastest-produit">
+        <div class="container-vitrine d-flex wrap">
+            <div class="produit">
+                <h2><span class="app-name-namas font-weight-bold">Namas</span><span class="app-name-test font-weight-bold">test</span></h2>
+                <p>Namastest - La gestion de vos tests en toute tranquillité.</p>
+                <p>Essayez vos solutions de manière efficiente au sein de vos équipes de tests jusqu'au lancement de votre produit.</p>
+                <p>Essayez la simplicité de notre application web dès maintenant au sein de vos projets.</p>
+                <ul>
+                    <li>
+                        {% if app.user %}
+                            <a class="vitrine-links" href="{{ path('projet_liste') }}">Projets</a>
+                            <a class="vitrine-links" href="{{ path('app_logout') }}">Déconnexion</a>
+                        {% else %}
+                            <a class="vitrine-links" href="{{ path('app_register') }}">S'inscrire</a>
+                            <a class="vitrine-links" href="{{ path('app_login') }}">Se connecter</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+            <img src="{{ asset('img/Logo_App.png') }}" alt="Namastest">
+        </div>
+    </article>
+    <article class="vitrine-namastest-atouts">
+        <div class="vitrine-namastest-title">
+            <h2>Nos atouts</h2>
+        </div>
+        <div class="atouts">
+            <div class="vitrine-card-atouts">
+                <div class="carreFl"><p class="cards-atouts-title">FL</p></div>
+                <div class="card-center">
+                    <h3>Flexibilité</h3>
+                    <p>Créer vos cas de tests réutilisables dans vos campagnes.</p>
+                    <i class="fab fa-centos fa-5x"></i>
+                </div>
+            </div>
+            <div class="vitrine-card-atouts">
+                <div class="carreQU"><p class="cards-atouts-title">QU</p></div>
+                <div class="card-center">
+                    <h3>Qualité</h3>
+                    <p>Minimiser les risques et assurer la fiabilité de toutes vos campagnes.</p>
+                    <i class="far fa-calendar-check fa-5x"></i>
+                </div>
+            </div>
+            <div class="vitrine-card-atouts">
+                <div class="carrePF"><p class="cards-atouts-title">PF</p></div>
+                <div class="card-center">
+                    <h3>Performance</h3>
+                    <p>Travailler en équipe de façon à optimiser vos performances globales sur un projet.</p>
+                    <i class="fas fa-chart-line fa-5x"></i>
+                </div>
+            </div>
+        </div>
+    </article>
+    <article class="vitrine-namastest-cycle">
+        <div class="namastest-cycle">
+            <p>Créer votre premier projet, inviter vos collaborateurs, <br>
+                gérer les rôles et commencer à travailler en équipe avec le …</p>
+            <h2>Cycle de Namastest.</h2>
+        </div>
+        <div class="display flex-direction">
+            <div class="namastest-cycle-container-tests">
+                <h4>Créer ses cas tests</h4>
+                <img src="{{ asset('img/GererSesCasDeTest.png') }}" alt="Image de l'outil namastest">
+            </div>
+            <div class="namastest-cycle-container-catalogues">
+                <h4>Gérer ses catalogues</h4>
+                <img src="{{ asset('img/GererSesCatalogues.png') }}" alt="Image de l'outil namastest">
+            </div>
+        </div>
+        <div class="display flex-direction">
+            <div class="namastest-cycle-container-campagnes">
+                <h4>Concevoir ses campagnes</h4>
+                <img src="{{ asset('img/ConcevoirSesCampagnes.png') }}" alt="Image de l'outil namastest">
+            </div>
+            <div class="namastest-cycle-container-resulats">
+                <h4>Analyser les résulats</h4>
+                <img src="{{ asset('img/AnalyserLesResultats.png') }}" alt="Image de l'outil namastest">
+            </div>
+        </div>
+        <div>
+            <div class="namastest-cycle-ecocysteme">
+                <div class="display">
+                    <img src="{{ asset('img/Logo_App.png') }}" alt="">
+                    <p>Un outil conçu pour vous accompagner afin d’affiner vos produits jusqu’au lancement !
+                        Mais aussi pour accompagner vos équipe en …</p>
+                </div>
+                <h3>Nous adaptant à votre ecosystème.</h3>
+            </div>
+        </div>
+    </article>
+    <article class="vitrine-namastest-connectors">
+        <h2>Liste des connecteurs</h2>
+        <div class="namastest-connectors-container">
+            <div class="connectors">
+                <img src="{{ asset('img/Excel.png') }}" alt="Logo de Excel">
+                <p>Excel</p>
+            </div>
+            <div class="connectors">
+                <img src="{{ asset('img/Jira.png') }}" alt="Logo de Jira">
+                <p>Jira</p>
+            </div>
+            <div class="connectors">
+                <img src="{{ asset('img/Tuleap.png') }}" alt="Logo de Tuleap">
+                <p>Tuleap</p>
+            </div>
+            <div class="connectors">
+                <img src="{{ asset('img/Polarion.png') }}" alt="Logo de Polarion">
+                <p>Polarion</p>
+            </div>
+        </div>
+        <div class="interoperability">
+            <div class="interoperability-container">
+                <p><span class="app-name-namas font-weight-bold">Namas</span><span class="app-name-test font-weight-bold">Test</span> est disponible sur ordinateur, tablette et mobile.</p>
+                <img src="{{ asset('img/Logo_App.png') }}" alt="Logo de Namastest">
+                <p><span class="app-name-namas font-weight-bold">L'inter</span><span class="app-name-test font-weight-bold">opérabilité</span> pour une vision commune.</p>
+            </div>
+        </div>
+    </article>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+{% endblock %}

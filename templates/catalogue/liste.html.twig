@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Catalogues de test {{ parent() }} {% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set createCata = false %}
+    {% set editCata = false %}
+    {% set deleteCata = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'CREECATA' or r.code == 'EDITCATA' or r.code == 'SUPPCATA') %}
+            {% if droit.code == 'CREECATA' %}
+                {% set createCata = true %}
+            {% endif %}
+            {% if droit.code == 'EDITCATA' %}
+                {% set editCata = true %}
+            {% endif %}
+            {% if droit.code == 'SUPPCATA' %}
+                {% set deleteCata = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set createCata = true %}
+    {% set editCata = true %}
+    {% set deleteCata = true %}
+{% endif %}
+
+{% block body %}
+    <div class="row row-cols-1">
+        <div>
+            <h1 class="text-center">Vos catalogues de tests</h1>
+            <hr>
+
+            {{ include('inc/modals/import-doc-catalogue-modal.html.twig')}}
+
+            {% if catalogues is empty %}
+                <div class="text-center mt-5">
+                    <p>Vous n'avez créé aucun catalogue pour le moment.</p>
+                    {% if createCata %}
+                        <a class="btn btn-lg btn-primary m-3" href="{{ path('catalogue_create', { projetId: projet.id }) }}">
+                            Créer un catalogue de test
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+            <div class="container-searchbar-and-button">
+                <div class="container-searchbar">
+                    <label for="searchbar-catalogue-list">Rechercher un catalogue par son libellé</label>
+                    <div>
+                        <span><i class="fas fa-search"></i></span>
+                        <input id="searchbar-catalogue-list" class="searchbar-input" placeholder="Rechercher un catalogue.." type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="row row-cols-md-1 row-cols-lg-2 g-3">
+                {% if createCata %}
+                    <div class="col-12 d-flex">
+                        <div class="card flex-fill mb-2">
+                            <div class="card-body d-flex align-items-center justify-content-center">
+                                <a href="{{ path('catalogue_create', { projetId: projet.id }) }}" class="btn btn-lg btn-primary" title="Ajouter un nouveau catalogue">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% for c in catalogues %}
+                    <div class="mb-2 d-flex" data-id="{{ c.id }}">
+                        <div class="card card-blue flex-fill">
+                            <div class="card-body d-flex justify-content-between">
+                                <h3 class="card-title catalogue-nom">
+                                    {{ c.libelle }}
+                                </h3>
+                                <div class="d-flex align-items-start">
+                                    <a href="{{ path('catalogue_details', { 'projetId': projet.id,'id': c.id }) }}" class="btn btn-fonce py-2" title="Accéder au catalogue">
+                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                    </a>
+                                    {% if editCata or deleteCata %}
+                                        <div class="nav-item dropdown ms-1">
+                                            <a class="btn btn-primary py-2" href="#" id="catalogue{{ c.id }}Dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="catalogue{{ c.id }}Dropdown">
+                                                {% if editCata %}
+                                                    <li>
+                                                        {# Lien désactivé s'il n'existe aucun template pour ce projet #}
+                                                        <a class="dropdown-item{{ projet.templates is empty ? ' disabled' : '' }}"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#listModal"
+                                                           data-bs-name="{{ c.libelle }}"
+                                                           data-bs-id="{{ c.id }}"
+                                                           data-bs-get="{{ path('api_liste_templates', {
+                                                               projetId: projet.id
+                                                           }) }}?catalogue={{ c.id }}"
+                                                           data-bs-action="{{ path('api_post_templates_catalogue', { projetId: projet.id, catalogueId: c.id }) }}"
+                                                           href="#ajouter">Gérer les cas de test</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                           href="{{ path('catalogue_modifier', { 'catalogueId': c.id, 'projetId': projet.id }) }}">Modifier le catalogue</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if editCata and deleteCata %}
+                                                    <li><hr class="dropdown-divider"></li>
+                                                {% endif %}
+                                                {% if deleteCata %}
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#deleteModal"
+                                                           data-bs-type="le catalogue"
+                                                           data-bs-name="{{ c.libelle }}"
+                                                           data-bs-id="{{ c.id }}"
+                                                           data-bs-path="{{ path('catalogue_delete', {
+                                                               projetId: projet.id,
+                                                               id: c.id
+                                                           }) }}"
+                                                           href="#supprimer">Supprimer</a>
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                            {% if c.templateCatalogueRelation is empty %}
+                                Ce catalogue est vide pour le moment.
+                            {% else %}
+                                Ce catalogue contient {{ c.templateCatalogueRelation | length }} template{{ c.templateCatalogueRelation | length > 1 ? "s" : "" }}.
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'inc/modals/delete-modal.html.twig' %}
+    <div class="modal fade" id="listModal" tabindex="-1" aria-labelledby="listModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="listModalLabel">Choisir les templates à inclure au catalogue</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-success confirmBtn">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/catalogues/searchbarCatalogueList.js') }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+    <script src="{{ asset('scripts/modals/modalAddTestsCatalogues.js') }}"></script>
+{% endblock %}

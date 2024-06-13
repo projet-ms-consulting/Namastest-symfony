@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% form_theme templatesTestForm 'bootstrap_4_layout.html.twig' %}
+{% block title %}Modifier un cas de test {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container col-12 col-md-10">
+    <h1 class="text-center m-3">Modifier un cas de test</h1>
+    {{ form_start(templatesTestForm) }}
+    {{ form_widget(templatesTestForm) }}
+    <button class="btn btn-lg btn-primary mt-3" type="submit">
+        Modifier
+    </button>
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+    {{ form_end(templatesTestForm) }}
+    </div>
+{% endblock %}
+

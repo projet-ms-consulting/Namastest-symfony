@@ -1,0 +1,55 @@
+<style>
+    header {
+        text-align: center;
+        padding: 1em;
+        margin-bottom: 1em;
+    }
+
+    main {
+        padding: 0 1em;
+        margin-bottom: 1em;
+    }
+
+    main p:first-child {
+        margin-bottom: 2em;
+    }
+
+    footer {
+        padding: 1em;
+    }
+</style>
+
+<header>
+    <h1>NamasTest</h1>
+</header>
+
+<main>
+    {% if utilisateur is defined %}
+        <p>
+            Bonjour <strong>{{ utilisateur.prenom }} {{ utilisateur.nom|upper }}</strong>,
+        </p>
+    {% else %}
+        <p>
+            Bonjour à vous,
+        </p>
+    {% endif %}
+
+    <p>
+        <strong>{{ expediteur.prenom }} {{ expediteur.nom|upper }}</strong> vous a invité à rejoindre le projet <strong>{{ projet.nom }}</strong>
+        en qualité de <strong>{{ role.libelle }}</strong> sur notre plateforme.
+    </p>
+
+    {% if utilisateur is defined %}
+        <p>
+            Vous pouvez consulter l'invitation en vous rendant sur votre <a href="{{ url('projet_liste') }}">liste de projets</a>.
+        </p>
+    {% else %}
+        <p>
+            Nous vous invitons à vous <a href="{{ url('app_register') }}">inscrire</a> afin de pouvoir répondre à cette invitation.
+        </p>
+    {% endif %}
+</main>
+
+<footer>
+    L'équipe <strong>NamasTest</strong> vous souhaite une bonne expérience sur notre outil.
+</footer>

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% form_theme campagneForm 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container col-12 col-md-10 col-lg-6">
+        <h1 class="text-center m-3">Modifier {{ campagne.nom }}</h1>
+        {{ form_start(campagneForm) }}
+        {{ form_widget(campagneForm) }}
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Modifier
+        </button>
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+        {{ form_end(campagneForm) }}
+    </div>
+{% endblock %}
+
+{% block title %}
+    Modifier une campagne de test {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script src="{{ asset('scripts/utils/datepicker.js') }}"></script>
+{% endblock %}

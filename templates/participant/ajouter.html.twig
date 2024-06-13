@@ -1,0 +1,21 @@
+{% extends 'base-gestion-projet.html.twig' %}
+{#  {% extends 'base.html.twig' %} #}
+{# Vu qu'on est dans la config du projet, on utilise base-projet (base tout court continent la barre de gauche), base projet n'a pas de barre sur la gauche) #}
+{% form_theme ajoutParticipantForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Ajouter un nouveau participant {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+        <h1 class="text-center">Ajouter un nouveau participant</h1>
+
+        {{ form_start(ajoutParticipantForm) }}
+        {{ form_widget(ajoutParticipantForm) }}
+        <button type="submit" class="btn btn-primary btn-lg my-3">Inviter</button>
+        {{ form_end(ajoutParticipantForm) }}
+    </div>
+</div>
+{% endblock %}
+
+

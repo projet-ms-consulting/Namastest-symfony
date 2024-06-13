@@ -1,0 +1,27 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block content_title %}{{ page }} #{{ message.id }}{% endblock %}
+
+{% block main %}
+
+    <h3>Objet : {{ message.objet }}</h3>
+
+    <hr>
+
+    <h6>Message</h6>
+    <div id="contact_message" class="form-control">
+        {{ message.message }}
+    </div>
+
+    <hr>
+
+    {{ form_start(form) }}
+    {{ form_row(form.message, {'label': 'Réponse'}) }}
+
+    <button type="submit" class="btn btn-success text-white"><i class="fas fa-check"></i> Envoyer</button>
+    <a href="{{ referer }}" class="btn link-primary">Retour</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

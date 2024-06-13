@@ -1,0 +1,82 @@
+{# VERIFICATION DU DROIT D'AFFICHAGE DES LIENS #}
+{% if projet.auteur != app.user %}
+    {# ON DECLARE PREALABLEMENT LES VARIABLES COMME FAUSSES LORSQUE L'UTILISATEUR N'EST PAS L'AUTEUR DU PROJET #}
+    {% set viewTemp = false %}
+    {% set viewCata = false %}
+    {% set viewCamp = false %}
+    {# ON FILTRE LA LISTE DES PARTICIPANTS #}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {# ON FILTRE LES DROITS QUI NOUS INTERESSENT #}
+        {% for droit in participant.role.droits|filter(r => r.code == 'VOIRTEMP' or r.code == 'VOIRCATA' or r.code == 'VOIRCAMP') %}
+            {% if droit.code == 'VOIRTEMP' %}
+                {% set viewTemp = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRCATA' %}
+                {% set viewCata = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRCAMP' %}
+                {% set viewCamp = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set viewTemp = true %}
+    {% set viewCata = true %}
+    {% set viewCamp = true %}
+{% endif %}
+<div class="navigation">
+    <ul>
+        <li class="list" id="projet-list">
+            <b></b>
+            <b></b>
+            <a href="{{ path('projet_liste') }}" title="Retour à la liste des projets">
+                <span class="icon">
+                    <i class="fas fa-project-diagram"></i>
+                </span>
+                <span class="title">
+                    Retour à la liste des projets
+                </span>
+            </a>
+        </li>
+        <li>
+            <div class="nom-projet">
+                Projet : {{ projet.nom }}
+            </div>
+        </li>
+        {% if viewTemp %}
+            {% include 'inc/navs-gauche/nav-gauche-fragments/nav-templates.html.twig' %}
+        {% endif %}
+        {% if viewCata %}
+            {% include 'inc/navs-gauche/nav-gauche-fragments/nav-catalogues.html.twig' %}
+        {% endif %}
+        {% if viewCamp %}
+            {% include 'inc/navs-gauche/nav-gauche-fragments/nav-campagnes.html.twig' %}
+        {% endif %}
+        {# okthxbye <li class="list" id="participants">
+            <b></b>
+            <b></b>
+            <a href="{{ path('participant_liste', {'projetId': projet.id}) }}" title="Participants">
+                <span class="icon">
+                    <i class="fas fa-user"></i>
+                </span>
+                <span class="title">
+                     Participants
+                </span>
+            </a>
+        </li> #}
+        <li class="list" id="toggle">
+            <b></b>
+            <b></b>
+            <div class="toggle" title="Déplier/Replier le menu">
+                <span class="icon">
+                    <i class="far fa-caret-square-down open"></i>
+                    <i class="far fa-minus-square close"></i>
+                </span>
+                <span class="title">
+                    Replier le menu
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>
+

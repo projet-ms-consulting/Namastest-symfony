@@ -1,0 +1,98 @@
+{% extends 'base-projet.html.twig' %}
+{% form_theme formulaireProjet 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Vos projets {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Vos projets</h1>
+
+        <hr>
+
+        <h2 class="my-3">Mes projets</h2>
+
+        {% if projetsAuteur is empty %}
+            <div class="text-center mt-5">
+                <p>Vous n'avez créé aucun projet pour le moment.</p>
+                <div class="btn btn-lg btn-primary" title="Ajouter un projet" id="bouton-creer">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="form-projet d-none m-2 col-12 col-md-6 col-lg-4 m-auto">
+                    {{ form_start(formulaireProjet) }}
+                    {{ form_widget(formulaireProjet) }}
+                    <button class="btn btn-lg btn-fonce mt-3" type="submit">
+                        Créer
+                    </button>
+                    <div class="btn btn-lg btn-primary mt-3" title="Cacher le formulaire" id="bouton-cacher">
+                        <i class="fa fa-minus"></i>
+                    </div>
+
+                    {{ form_end(formulaireProjet) }}
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                {% for projet in projetsAuteur %}
+                    <div class="col-12 col-md-6 col-lg-4 mb-3 d-flex" data-id="{{ projet.id }}">
+                        {% include 'inc/cards/projet-card.html.twig' with {'projet': projet, 'isAuteur': true} %}
+                    </div>
+                {% endfor %}
+                <div class="col-12 col-md-6 col-lg-4 mb-3 d-flex">
+                    <div class="card flex-fill">
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <div class="btn btn-lg btn-primary" title="Ajouter un projet" id="bouton-creer">
+                                <i class="fa fa-plus"></i>
+                            </div>
+                            <div class="form-projet d-none m-2">
+                                {{ form_start(formulaireProjet) }}
+                                {{ form_widget(formulaireProjet) }}
+                                <button class="btn btn-lg btn-fonce mt-3" type="submit">
+                                    Créer
+                                </button>
+                                <div class="btn btn-lg btn-primary mt-3" title="Cacher le formulaire" id="bouton-cacher">
+                                    <i class="fa fa-minus"></i>
+                                </div>
+
+                                {{ form_end(formulaireProjet) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <hr>
+
+        <h2 class="my-3">Les projets auxquels je participe</h2>
+
+        {% if projetsParticipe is empty and projetsInvite is empty %}
+            <div class="text-center mt-5">
+                <p>Vous n'avez été invité à aucun projet pour le moment.</p>
+            </div>
+        {% else %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                {% for invitation in projetsInvite %}
+                    <div class="d-flex" data-id="{{ invitation.projet.id }}">
+                        {% include 'inc/cards/projet-card.html.twig' with {'invitation': invitation} %}
+                    </div>
+                {% endfor %}
+
+                {% for projet in projetsParticipe %}
+                    <div class="d-flex mb-3" data-id="{{ projet.id }}">
+                        {% include 'inc/cards/projet-card.html.twig' with {'projet': projet} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'inc/modals/delete-modal.html.twig' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/gestion-projet/toggleFormCreationProjet.js') }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+    <script src="{{ asset('scripts/gestion-projet/changementNomProjet.js') }}"></script>
+
+{% endblock %}

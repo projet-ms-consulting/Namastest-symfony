@@ -1,0 +1,38 @@
+<div class="barre-action">
+    <div class="col-12 barre-action-content cat">
+        {% if createTemp and editCata %}
+            <div>
+                <a class="btn btn-lg btn-primary" title="Ajouter un cas de test" href="{{ path('catalogue_creer_test', {'catalogueId': catalogueId, 'projetId': projetId}) }}">
+                    <i class="fa fa-plus"></i>
+                    <span class="text-ab-link">Ajouter un cas de test</span>
+                </a>
+            </div>
+        {% endif %}
+        {% if addTest %}
+            <div>
+                <a class="btn btn-lg btn-primary" title="Ajouter la sélection à une campagne" id="bouton-afficher">
+                    <i class="fas fa-folder-plus"></i>
+                    <span class="text-ab-link">Ajouter à une campagne</span>
+                </a>
+                <a class="btn btn-lg btn-primary d-none" title="Ajouter un catalogue de test" id="bouton-cacher">
+                    <i class="fas fa-minus"></i>
+                    <span class="text-ab-link">Cacher les campagnes</span>
+                </a>
+            </div>
+        {% endif %}
+        {% if editCata %}
+            <div>
+               <a class="btn btn-lg btn-primary" title="Modifier les infos du catalogue" href="{{ path('catalogue_modifier', {'catalogueId': catalogueId, 'projetId': projetId}) }}">
+                   <i class="far fa-edit"></i>
+                   <span class="text-ab-link">Modifier le catalogue</span>
+               </a>
+           </div>
+            <div>
+                <button class="btn btn-lg btn-primary deleteLink" type="submit" name="remove-tests" data-message="Êtes vous sûr(e) de vouloir retirer la sélection de cas de test du catalogue ? Les cas de test ne seront pas supprimés complètement, seulement retirés du catalogue.">
+                    <i class="far fa-trash-alt"></i>
+                    <span class="text-ab-link">Retirer des cas de test</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>

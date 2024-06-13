@@ -1,0 +1,27 @@
+{% extends 'base-gestion-projet.html.twig' %}
+{% form_theme roleForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Modifier un rôle {{ parent() }}{% endblock %}
+
+{% block body %}
+
+<div class="row row-cols-1">
+    <div>
+        <h1 class="text-center">Modifier un rôle</h1>
+        <hr>
+
+        {{ form_start(roleForm) }}
+        {{ form_widget(roleForm) }}
+        <button type="button" class="btn btn-secondary btn-lg mt-3" id="selectAll">Tout sélectionner</button>
+        <button type="submit" class="btn btn-primary btn-lg mt-3">Enregistrer</button>
+        <a href="{{ app.request.headers.get('referer') }}" class="btn btn-danger btn-lg mt-3">Annuler</a>
+        {{ form_end(roleForm) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script src="{{ asset('scripts/gestion-projet/roles.js') }}"></script>
+{% endblock %}
+

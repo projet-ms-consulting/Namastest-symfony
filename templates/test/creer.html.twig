@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% form_theme formCreerTest 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Ajouter un test {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container col-12 col-md-6 offset-md-3 creer-test-campagne">
+        <h3 class="text-center m-4">Créer un test pour la campagne : {{ campagne.nom }}</h3>
+        {{ form_start(formCreerTest) }}
+        {{ form_errors(formCreerTest) }}
+        {{ form_widget(formCreerTest) }}
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Créer
+        </button>
+        {# app.request.headers.get('referer') référence la page dont on vient, il s'agit d'un lien RETOUR en gros #}
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+        {{ form_end(formCreerTest) }}
+    </div>
+{% endblock %}

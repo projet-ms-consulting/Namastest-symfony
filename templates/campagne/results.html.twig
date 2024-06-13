@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+
+{% if projet.auteur != app.user %}
+    {% set voirCamp = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'VOIRCAMP' ) %}
+            {% if droit.code == 'VOIRCAMP' %}
+                {% set voirCamp = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set voirCamp = true %}
+{% endif %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('scripts/utils/charts.js') }}" data-campagne-nb-ok="{{ data['OK'] }}" data-campagne-nb-ko="{{ data['KO'] }}" data-campagne-nb-nt="{{ data['nonTeste'] }}"></script>
+{% endblock %}
+
+{% block title %}
+    Statistiques - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% if voirCamp %}
+    <div class="container row camp-clot-stats">
+        <div class="col-12 col-lg-5 camp-clot-stats-text">
+            <div class="tot color-nn">
+                Nombre de tests total : {{ data['total'] }} <br><br>
+            </div>
+            <div class="color-ok">
+                Nombre de tests OK : {{ data['OK'] }} <br>
+                Pourcentage de tests OK : {{ data['pctReussite'] }} % <br>
+            </div>
+            <div class="color-ko">
+                Nombre de tests KO : {{ data['KO'] }} <br>
+                Pourcentage de tests KO : {{ data['pctRatage'] }} % <br>
+            </div>
+            <div class="color-nt">
+                Nombre de tests non testés : {{ data['nonTeste'] }} <br><br>
+                Pourcentage de tests non testés : {{ data['pctNonTeste'] }} % <br><br>
+            </div>
+            <div class="tot color-nn">
+                Temps d'exécution de la campagne : {{ data['temps'] }} <br>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 offset-lg-1">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div>
+        <a class="btn btn-lg btn-primary" title="Retour au détail de la campagne" href="{{ path('campagnes_detail', {'id': campagne.id, 'idProjet': projet.id}) }}">
+            <i class="fa fa-arrow-left"></i>
+            Retour au détail de la campagne
+        </a>
+    </div>
+    {% else %}
+        <div>
+            Vous ne disposez pas des droits nécessaires pour consulter les résultats de la campagne
+        </div>
+    {% endif %}
+{% endblock %}

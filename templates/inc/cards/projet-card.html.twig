@@ -1,0 +1,86 @@
+{% if invitation|default %}
+    {% set projet = invitation.projet %}
+{% endif %}
+<div class="card flex-fill{{ invitation is defined ? '' : ' card-blue' }}">
+    <div class="card-body d-flex justify-content-between">
+       <form id="formulaire{{ projet.id }}" method="post" action="{{ path('projet_renommer', {'id':projet.id}) }}">
+        <h3 id="{{ projet.nom }}" class="card-title">
+            {{ projet.nom }}
+            {% if invitation|default %}
+                <small class="text-muted">(invitation)</small>
+            {% endif %}
+        </h3>
+        </form>
+
+        {% if invitation|default %}
+            <div class="d-flex align-items-start">
+                <a href="{{ path('invitation_accepter', {id: invitation.id}) }}" class="btn btn-success py-2" title="Accepter l'invitation">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                </a>
+                <a href="{{ path('invitation_refuser', {id: invitation.id}) }}" class="btn btn-danger py-2 ms-1" title="Refuser l'invitation">
+                    <i class="fas fa-ban" aria-hidden="true"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="d-flex align-items-start">
+                <a href="{{ path('projet_dashboard', {'projetId': projet.id}) }}" class="btn btn-fonce py-2" title="Accéder au projet">
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                </a>
+                {% set viewRoles = false %}
+                {% set viewParts = false %}
+                {% if projet.auteur != app.user %}
+                    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+                        {% for droit in participant.role.droits|filter(r => r.code == 'VOIRROLE' or r.code == 'VOIRPART') %}
+                            {% if droit.code == 'VOIRROLE' %}
+                                {% set viewRoles = true %}
+                            {% endif %}
+                            {% if droit.code == 'VOIRPART' %}
+                                {% set viewParts = true %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if isAuteur|default or viewRoles or viewParts %}
+                    <div class="nav-item dropdown ms-1">
+                        <a class="btn btn-primary py-2" href="#" id="projet{{ projet.id }}Dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="projet{{ projet.id }}Dropdown">
+                            {% if isAuteur|default or viewRoles %}
+                                <li><a class="dropdown-item" id="lien_renommer" href="#" onclick="renommer('{{ projet.nom }}', {{ projet.id }})">Renommer</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('role_liste', {projetId: projet.id}) }}">Gérer les rôles</a></li>
+                            {% endif %}
+                            {% if isAuteur|default or viewParts %}
+                                <li><a class="dropdown-item" href="{{ path('participant_liste', {projetId: projet.id}) }}">Gérer les participants</a></li>
+                            {% endif %}
+                            {% if isAuteur|default %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('projet_importer', {'projetId': projet.id}) }}">Sauvegarde du projet</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger delete"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#deleteModal"
+                                       data-bs-type="le projet"
+                                       data-bs-name="{{ projet.nom }}"
+                                       data-bs-id="{{ projet.id }}"
+                                       data-bs-path="{{ path('projet_delete', {id: projet.id}) }}"
+                                       href="#supprimer">Supprimer</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-footer text-end">
+    {% if invitation|default %}
+        Invité le {{ invitation.dateEnvoi|date('d/m/Y à G\\hi') }}
+    {% else %}
+        Créé le {{ projet.dateCreation|date('d/m/Y à G\\hi') }}
+    {% endif %}
+    </div>
+</div>

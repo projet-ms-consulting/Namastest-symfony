@@ -1,0 +1,74 @@
+{# VERIFICATION DU DROIT D'AFFICHAGE DES LIENS #}
+{% if projet.auteur != app.user %}
+    {# ON DECLARE PREALABLEMENT LES VARIABLES COMME FAUSSES LORSQUE L'UTILISATEUR N'EST PAS L'AUTEUR DU PROJET #}
+    {% set viewPart = false %}
+    {% set viewRole = false %}
+    {# ON FILTRE LA LISTE DES PARTICIPANTS #}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {# ON FILTRE LES DROITS QUI NOUS INTERESSENT #}
+        {% for droit in participant.role.droits|filter(r => r.code == 'VOIRPART' or r.code == 'VOIRROLE') %}
+            {% if droit.code == 'VOIRPART' %}
+                {% set viewPart = true %}
+            {% endif %}
+            {% if droit.code == 'VOIRROLE' %}
+                {% set viewRole = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set viewPart = true %}
+    {% set viewRole = true %}
+{% endif %}
+<div class="navigation">
+    <ul>
+        <li class="list" id="projet-list">
+            <b></b>
+            <b></b>
+            <a href="{{ path('projet_liste') }}" title="Retour à la liste des projets">
+                <span class="icon">
+                    <i class="fas fa-project-diagram"></i>
+                </span>
+                <span class="title">
+                    Retour à la liste des projets
+                </span>
+            </a>
+        </li>
+        <li>
+            <div class="nom-projet">
+                Projet : {{ projet.nom }}
+            </div>
+        </li>
+        {% if viewRole %}
+            {% include 'inc/navs-gauche/nav-projet-fragments/nav-roles.html.twig' %}
+        {% endif %}
+        {% if viewPart %}
+            {% include 'inc/navs-gauche/nav-projet-fragments/nav-participants.html.twig' %}
+        {% endif %}
+        {# okthxbye <li class="list" id="participants">
+            <b></b>
+            <b></b>
+            <a href="{{ path('participant_liste', {'projetId': projet.id}) }}" title="Participants">
+                <span class="icon">
+                    <i class="fas fa-user"></i>
+                </span>
+                <span class="title">
+                     Participants
+                </span>
+            </a>
+        </li> #}
+        <li class="list" id="toggle">
+            <b></b>
+            <b></b>
+            <div class="toggle" title="Déplier/Replier le menu">
+                <span class="icon">
+                    <i class="far fa-caret-square-down open"></i>
+                    <i class="far fa-minus-square close"></i>
+                </span>
+                <span class="title">
+                    Replier le menu
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>
+

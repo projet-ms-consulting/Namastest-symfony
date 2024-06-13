@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des campagnes {{ parent() }} {% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set createCamp = false %}
+    {% set etatCamp = false %}
+    {% set editCamp = false %}
+    {% set deleteCamp = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'CREECAMP' or r.code == 'ETATCAMP' or r.code == 'EDITCAMP'
+        or r.code == 'SUPPCAMP') %}
+            {% if droit.code == 'CREECAMP' %}
+                {% set createCamp = true %}
+            {% endif %}
+            {% if droit.code == 'ETATCAMP' %}
+                {% set etatCamp = true %}
+            {% endif %}
+            {% if droit.code == 'EDITCAMP' %}
+                {% set editCamp = true %}
+            {% endif %}
+            {% if droit.code == 'SUPPCAMP' %}
+                {% set deleteCamp = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set createCamp = true %}
+    {% set etatCamp = true %}
+    {% set editCamp = true %}
+    {% set deleteCamp = true %}
+{% endif %}
+
+{% block body %}
+    <div class="row liste-campagnes">
+        <div>
+            <h1 class="text-center">Campagnes</h1>
+            <hr>
+            {% if campagnes is empty %}
+                <div class="text-center mt-5">
+                    <p>Vous n'avez créé aucune campagne pour le moment.</p>
+                    {% if createCamp %}
+                        <a class="btn btn-lg btn-primary" title="Créer une campagne" href="{{ path('campagnes_creer', {'idProjet': projet.id}) }}">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="container-searchbar-and-button">
+                    <div class="container-searchbar">
+                        <label for="searchbar-campagne-list">Rechercher une campagne par son nom</label>
+                        <div>
+                            <span><i class="fas fa-search"></i></span>
+                            <input id="searchbar-campagne-list" class="searchbar-input" placeholder="Rechercher une campagne.." type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% if createCamp %}
+                        <div class="col-12 d-flex">
+                            <div class="card flex-fill mb-3">
+                                <div class="card-body d-flex align-items-center justify-content-center">
+                                    <a class="btn btn-lg btn-primary" title="Créer une campagne" href="{{ path('campagnes_creer', {'idProjet': projet.id}) }}">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% for campagne in campagnes %}
+                        <div class="col-12 col-lg-6 mb-3 d-flex" data-id="{{ campagne.id }}">
+                            {% include 'inc/cards/campagne-card.html.twig' with {'campagne': campagne} %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'inc/modals/delete-modal.html.twig' %}
+    {% include 'inc/modals/text-modal.html.twig' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/campagnes/searchbarCampagneList.js') }}"></script>
+    <script src="{{ asset('scripts/modals/textModal.js') }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+{% endblock %}
+

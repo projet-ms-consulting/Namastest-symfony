@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% form_theme execTestForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Exécuter un test {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container row">
+        <div class="col-12 col-md-6 creer-test-campagne">
+            <h3 class="text-center m-4">Executer le test : {{ test.nom }}</h3>
+            {{ form_start(execTestForm) }}
+            {{ form_errors(execTestForm) }}
+            {{ form_widget(execTestForm) }}
+            <button class="btn btn-lg btn-primary mt-3" type="submit">
+                Enregistrer
+            </button>
+            <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+            {{ form_end(execTestForm) }}
+        </div>
+        <div class="col-12 col-md-6 p-3">
+            <div class="separateur">
+                Détails du test
+            </div>
+            <div class="exec-info">
+                <div class="info">
+                    <span class="font-weight-bold">
+                        Nom du test :
+                    </span>
+                        <span>
+                        {{ test.nom ? test.nom : test.template.nom }}
+                    </span>
+                </div>
+                <div class="info">
+                    <span class="font-weight-bold">
+                        Description du test :
+                    </span>
+                        <span>
+                        {{ test.description ? test.description : test.template.description }}
+                    </span>
+                </div>
+            </div>
+            <div class="separateur">
+                Cas de test parent
+            </div>
+            <div class="exec-info">
+                <div class="info">
+                    <span class="font-weight-bold">
+                        Nom du parent :
+                    </span>
+                    <span>
+                        {{ test.template ? test.template.nom : 'Aucun parent' }}
+                    </span>
+                </div>
+                <div class="info">
+                    <span class="font-weight-bold">
+                        Description du parent :
+                    </span>
+                    <span>
+                        {{ test.template ? test.template.description : 'Aucun parent' }}
+                    </span>
+                </div>
+                <div class="info">
+                    <span class="font-weight-bold">
+                        Catalogues du parent :
+                    </span>
+                    <span>
+                        {% if test.template %}{% if test.template.templateCatalogueRelation | length is same as 0 %} Non classé{% endif %}{% else %}Aucun parent{% endif %}
+                        {% if test.template %}
+                            {% for relation in test.template.templateCatalogueRelation %}
+                                {{ relation.catalogue.libelle }}
+                            {% endfor %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

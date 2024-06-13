@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% form_theme formModifier 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Ajouter un test {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container col-12 col-md-6 offset-md-3 creer-test-campagne">
+        <h4 class="text-center m-4">Modifier le test "{{ test.nom ? test.nom : test.template.nom }}" de la campagne "{{ campagne.nom }}"</h4>
+        {{ form_start(formModifier) }}
+        {{ form_errors(formModifier) }}
+        {{ form_widget(formModifier) }}
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Modifier
+        </button>
+        <a class="btn btn-lg btn-primary mt-3" href="{{ app.request.headers.get('referer') }}">Annuler</a>
+        {{ form_end(formModifier) }}
+    </div>
+{% endblock %}

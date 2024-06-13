@@ -1,0 +1,10 @@
+<div class="barre-action">
+    <div class="col-12 barre-action-content cat">
+            <a class="btn btn-lg btn-primary m-3" title="Ajouter un template de test" href="{{ path('templates_test_creer', {'id' : projet.id}) }}">
+                <i class="fa fa-plus"></i>
+                <span class="text-ab-link">Créer un cas de test</span>
+            </a>
+            {% include'inc/modals/import-excel-test-modal.html.twig' %}
+        </div>
+    </div>
+</div>

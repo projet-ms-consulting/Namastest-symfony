@@ -1,0 +1,8 @@
+Bonjour {% if utilisateur is defined %}{{ utilisateur.prenom }} {{ utilisateur.nom|upper }}{% else %}à vous{% endif %},
+
+{{ expediteur.prenom }} {{ expediteur.nom|upper }} vous a invité à rejoindre le projet {{ projet.nom }} en qualité de {{ role.libelle }}.
+{% if utilisateur is defined %}Vous pouvez consulter l'invitation en vous rendant sur votre liste de projets ({{ url('projet_liste') }}).{%
+else %}Nous vous invitons à vous inscrire afin de pouvoir répondre à cette invitation en suivant ce lien : {{ url('app_register') }}{% endif %}
+
+
+L'équipe NamasTest vous souhaite une bonne expérience sur notre outil.

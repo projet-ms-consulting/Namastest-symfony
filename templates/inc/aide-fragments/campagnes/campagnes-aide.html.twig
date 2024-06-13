@@ -1,0 +1,146 @@
+Les campagnes de test sont le coeur de l'outil Namastest. Les cas de test et les catalogues peuvent être ajoutés et retirés à volonté d'une campagne en préparation. Une campagne "En préparation" peut également être modifiée (sa description, ses dates et son nom). Si elle est "En cours", vous ne pourrez plus ajouter et retirer des cas de test, supprimer ou modifier la campagne. Vous pourrez cependant exécuter les tests de cette campagne et ajouter des précisions sur l'exécution de ces tests. Lorsqu'elle sera clôturée, redeviendra supprimable. Vous pourrez consulter ainsi qu'exporter les résultats de cette campagne. Vous pouvez utiliser le glisser-déposer pour réordonner les tests d'une campagne. Vous pouvez également cliquer sur les en-têtes de la liste des tests pour les trier. Vous pouvez rechercher une campagne dans la liste des campagnes ou un test dans une campagne grâce à une barre de recherche. Lorsque vous cliquez sur un test dans une campagne, son détail est affiché.
+<br><br>
+{# NOUVEAU ACCORDION #}
+<div class="accordion accordion-flush" id="accordionFlushCampagne">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseOne" aria-expanded="false" aria-controls="campagne-collapseOne">
+                Voir les campagnes
+            </button>
+        </h2>
+        <div id="campagne-collapseOne" class="accordion-collapse collapse" aria-labelledby="campagne-headingOne">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/liste.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseTwo" aria-expanded="false" aria-controls="campagne-collapseTwo">
+                Modifier une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseTwo" class="accordion-collapse collapse" aria-labelledby="campagne-headingTwo">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/modifier.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseThree" aria-expanded="false" aria-controls="campagne-collapseThree">
+                Supprimer une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseThree" class="accordion-collapse collapse" aria-labelledby="campagne-headingThree">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/supprimer.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseFour" aria-expanded="false" aria-controls="campagne-collapseFour">
+                Préparer une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseFour" class="accordion-collapse collapse" aria-labelledby="campagne-headingFour">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/preparer.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingFive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseFive" aria-expanded="false" aria-controls="campagne-collapseFive">
+                Démarrer une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseFive" class="accordion-collapse collapse" aria-labelledby="campagne-headingFive">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/demarrer.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingSix">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseSix" aria-expanded="false" aria-controls="campagne-collapseSix">
+                Exécuter une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseSix" class="accordion-collapse collapse" aria-labelledby="campagne-headingSix">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/executer.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingSeven">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseSeven" aria-expanded="false" aria-controls="campagne-collapseSeven">
+                Clôturer une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseSeven" class="accordion-collapse collapse" aria-labelledby="campagne-headingSeven">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/cloturer.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingEight">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseEight" aria-expanded="false" aria-controls="campagne-collapseEight">
+                Consulter les statistiques d'une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseEight" class="accordion-collapse collapse" aria-labelledby="campagne-headingEight">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/resultats.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingNine">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseNine" aria-expanded="false" aria-controls="campagne-collapseNine">
+                Exporter les résultats d'une campagne
+            </button>
+        </h2>
+        <div id="campagne-collapseNine" class="accordion-collapse collapse" aria-labelledby="campagne-headingNine">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/export.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="campagne-headingTen">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#campagne-collapseTen" aria-expanded="false" aria-controls="campagne-collapseTen">
+                Aide à l'importation dans Jira
+            </button>
+        </h2>
+        <div id="campagne-collapseTen" class="accordion-collapse collapse" aria-labelledby="campagne-headingTen">
+            <div class="accordion-body">
+
+                {% include 'inc/aide-fragments/campagnes/accordion-bodies/aide-jira.html.twig' %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{# FIN DU NOUVEAU ACCORDION #}

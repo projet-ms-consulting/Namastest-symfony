@@ -1,0 +1,120 @@
+{% extends 'base-gestion-projet.html.twig' %}
+{#  {% extends 'base.html.twig' %} #}
+{# Vu qu'on est dans la config du projet, on utilise base-projet (base tout court continent la barre de gauche), base projet n'a pas de barre sur la gauche) #}
+{% block title %}Participants au projet {% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set addPart = false %}
+    {% set editPart = false %}
+    {% set deletePart = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'AJOUPART' or r.code == 'EDITPART' or r.code == 'SUPPPART') %}
+            {% if droit.code == 'AJOUPART' %}
+                {% set addPart = true %}
+            {% endif %}
+            {% if droit.code == 'EDITPART' %}
+                {% set editPart = true %}
+            {% endif %}
+            {% if droit.code == 'SUPPPART' %}
+                {% set deletePart = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set addPart = true %}
+    {% set editPart = true %}
+    {% set deletePart = true %}
+{% endif %}
+
+{% block body %}
+<div class="row row-cols-1">
+    <div>
+        <h1 class="text-center">Participants au projet</h1>
+        <hr>
+
+        {% if addPart %}
+            <div class="barre-action">
+                <a class="btn btn-lg btn-primary" title="Ajouter un nouveau participant" href="{{ path('participant_ajouter', {projetId: projet.id}) }}">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="text-ab-link">Ajouter un nouveau participant</span>
+                </a>
+            </div>
+        {% endif %}
+
+        <ul class="list-group list-group-flush inline-block">
+            <li class="list-group-item fs-4 d-flex">
+                <strong>{{ projet.auteur.prenom }} {{ projet.auteur.nom|upper }}</strong>
+                <span class="ms-auto">Auteur</span>
+            </li>
+            {% for p in participants %}
+                <li class="list-group-item d-flex">
+                    <strong class="me-3 mt-2">{{ p.utilisateur.prenom }} {{ p.utilisateur.nom|upper }}</strong>
+                    {% if deletePart %}
+                        <a
+                           data-bs-toggle="modal"
+                           data-bs-target="#deleteModal"
+                           data-bs-type="l'utilisateur'"
+                           data-bs-name="{{ p.utilisateur.prenom }} {{ p.utilisateur.nom|upper }}"
+                           data-bs-id="{{ p.id }}"
+                           data-bs-path="{{ path('participant_supprimer', {'projetId': projet.id, 'partId' : p.id}) }}"
+                           href="#supprimer"
+                           class="delete-invit btn btn-red">
+                            <i class="fas fa-trash-alt"></i>
+                            Supprimer l'utilisateur du projet
+                        </a>
+                        </li>
+
+                    {% endif %}
+                    {% if editPart %}
+                        <div class="ms-auto w-50 d-flex justify-content-end">
+                            <div class="spinner-border text-success d-none" role="status">
+                                <span class="visually-hidden">Modification...</span>
+                            </div>
+                            <select name="role"
+                                    class="form-select ms-2 w-75"{{ p.utilisateur == app.user ? ' disabled' : '' }}
+                                    data-path="{{ path('participant_update_role', {'partId': p.id, 'projetId': projet.id}) }}">
+                                {% for role in projet.roles %}
+                                    <option value="{{ role.id }}"{{ p.role.id == role.id ? ' selected' : '' }}>{{ role.libelle }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% else %}
+                        <span class="ms-auto">{{ p.role.libelle }}</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="invitations mb-3">
+            <h3>Invitations au projet</h3>
+            <hr>
+            {% if invitations | length > 0 %}
+                {% for invitation in invitations %}
+                    {% if invitation.etat is not same as 1 %}
+                        <div class="invit {% if invitation.etat is same as 2 %} ref {% endif %}">
+                            <span class="destinataire">
+                                {{ invitation.destinataire }}
+                            </span> -
+                            <span class="etat">
+                                {% if invitation.etat is same as 0 %} En attente {% elseif invitation.etat is same as 2 %} Refusée {% endif %}
+                            </span>
+                            <a class="delete-invit btn btn-red" title="Supprimer l'invitation" href="{{ path('invitation_supprimer', {'id': invitation.id, 'projetId' : projet.id }) }}">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div>Aucune invitation.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+    {% include 'inc/modals/delete-modal.html.twig' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/gestion-projet/participants.js') }}"></script>
+    <script src="{{ asset('scripts/modals/deleteModal.js') }}"></script>
+{% endblock %}

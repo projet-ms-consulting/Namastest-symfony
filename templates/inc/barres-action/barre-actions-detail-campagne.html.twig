@@ -1,0 +1,48 @@
+<div class="barre-action">
+    <div class="col-12 barre-action-content camp">
+        {% if addTest %}
+            <div>
+                <a class="btn btn-lg btn-primary" title="Ajouter un cas de test" href="{{ path('campagnes_tests_creer', {'campagneId': campagne.id, 'idProjet': projet.id}) }}">
+                    <i class="fa fa-plus"></i>
+                    <span class="text-ab-link">Ajouter un cas de test</span>
+                </a>
+            </div>
+            <div>
+                <a class="btn btn-lg btn-primary" title="Ajouter un catalogue de test" id="bouton-afficher">
+                    <i class="fas fa-folder-plus"></i>
+                    <span class="text-ab-link">Ajouter un catalogue</span>
+                </a>
+                <span class="d-none" id="form-add-catalogue">
+                    {{ form_start(formAddCatalogue) }}
+                        {{ form_widget(formAddCatalogue) }}
+                        <button class="btn btn-lg btn-primary btn-form-cat" type="submit" name="add-catalogue">
+                            <i class="fas fa-plus"></i>
+                            <span class="text-ab-link d-none"> Ajouter</span>
+                        </button>
+                        <button class="btn btn-lg btn-primary btn-form-cat" title="Cacher le formulaire" id="bouton-cacher">
+                            <i class="fas fa-minus"></i>
+                            <span class="text-ab-link d-none">Annuler</span>
+                        </button>
+                    {{ form_end(formAddCatalogue) }}
+                </span>
+            </div>
+        {% endif %}
+        {% if deleteTest %}
+            <div>
+                {{ form_start(formMassExec) }}
+                <button class="btn btn-lg btn-primary deleteLink" type="submit" name="delete-tests" data-message="Voulez-vous vraiment supprimer cette sélection de tests ? Ces données ne seront pas récupérables.">
+                    <i class="far fa-trash-alt"></i>
+                    <span class="text-ab-link"> Supprimer des tests</span>
+                </button>
+            </div>
+        {% endif %}
+        {% if editCamp %}
+            <div>
+                <a class="btn btn-lg btn-primary" title="Modifier les infos de la campagne" href="{{ path('campagnes_modifier', {'id': campagne.id, 'idProjet': projet.id}) }}">
+                    <i class="far fa-edit"></i>
+                    <span class="text-ab-link">Modifier la campagne</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

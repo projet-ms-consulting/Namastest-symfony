@@ -1,0 +1,448 @@
+{% extends 'base.html.twig' %}
+
+{% if campagne.etat.isEnPrep %}
+    {% form_theme formAddCatalogue 'bootstrap_4_horizontal_layout.html.twig' %}
+    {% form_theme formMassExec 'bootstrap_4_horizontal_layout.html.twig' %}
+{% endif %}
+{% if campagne.etat.isEnCours %}
+    {% form_theme formMassExec 'bootstrap_4_horizontal_layout.html.twig' %}
+{% endif %}
+
+{% block title %}Campagne : {{ campagne.nom }} {{ parent() }}{% endblock %}
+
+{% if projet.auteur != app.user %}
+    {% set addTest = false %}
+    {% set deleteTest = false %}
+    {% set etatTest = false %}
+    {% set editCamp = false %}
+    {% set etatCamp = false %}
+    {% for participant in projet.participantsProjet|filter(p => p.utilisateur == app.user) %}
+        {% for droit in participant.role.droits|filter(r => 'AJOUTEST' or r.code == 'SUPPTEST' or r.code == 'ETATTEST'
+            or r.code == 'EDITCAMP' or r.code == 'ETATCAMP') %}
+            {% if droit.code == 'AJOUTEST' %}
+                {% set addTest = true %}
+            {% endif %}
+            {% if droit.code == 'SUPPTEST' %}
+                {% set deleteTest = true %}
+            {% endif %}
+            {% if droit.code == 'ETATTEST' %}
+                {% set etatTest = true %}
+            {% endif %}
+            {% if droit.code == 'EDITCAMP' %}
+                {% set editCamp = true %}
+            {% endif %}
+            {% if droit.code == 'ETATCAMP' %}
+                {% set etatCamp = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% set addTest = true %}
+    {% set deleteTest = true %}
+    {% set etatTest = true %}
+    {% set editCamp = true %}
+    {% set etatCamp = true %}
+{% endif %}
+
+{% block body %}
+    <div class="row row-cols-1">
+        <div>
+            <h1 class="text-center">{{ campagne.nom}}</h1>
+            <hr>
+            {% if campagne.description %}
+                <div>
+                    {{ campagne.description | nl2br }}
+                </div>
+                <hr>
+            {% endif %}
+            {% if campagne.dateDebutEstimee %}
+                <div>
+                    Programmée du : {{ campagne.dateDebutEstimee | date('d/m/Y') }} {% if campagne.dateFinEstimee %} au {{ campagne.dateFinEstimee | date('d/m/Y') }} {% endif %}
+                </div>
+                <hr>
+            {% else %}
+                {% if campagne.dateFinEstimee %}
+                    <div>
+                        Programmée pour être terminée le : {{ campagne.dateFinEstimee | date('d/m/Y') }}
+                    </div>
+                    <hr>
+                {% endif %}
+            {% endif %}
+            {% if campagne.etat.isCloturee %}
+                <div class="info">
+                    <a class="btn petit-btn btn-lg btn-primary" href="#" id="exportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-file-export"></i>
+                    </a>
+                    <h3 class="title-info">Exporter la campagne</h3>
+                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                        <li>
+                            <a  class="dropdown-item"
+                                title="Exporter un CSV (fichier classeur)"
+                                href="{{ path('campagnes_export_csv', {'id': campagne.id, 'idProjet': projet.id }) }}">
+                                fichier CSV
+                            </a>
+                        </li>
+                        <li>
+                            <a  class="dropdown-item"
+                                title="Exporter un fichier Excel"
+                                href="{{ path('campagnes_export_excel', {'id': campagne.id, 'idProjet': projet.id }) }}">
+                                fichier Excel
+                            </a>
+                        </li>
+                        <li>
+                            <a  class="dropdown-item"
+                                title="Exporter un CSV (tests KO uniquement)"
+                                href="{{ path('campagnes_export_csv_KO', {'id': campagne.id, 'idProjet': projet.id }) }}">
+                                fichier CSV des tests KO
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="container row camp-clot-stats">
+                    <div class="col-12 col-lg-5 camp-clot-stats-text">
+                        <div class="tot color-nn">
+                            Nombre de tests total : {{ campagne.data['total'] }} <br><br>
+                        </div>
+                        <div class="color-ok">
+                            Nombre de tests OK : {{ campagne.data['OK'] }} <br>
+                            Pourcentage de tests OK : {{ campagne.data['pctReussite'] }} % <br>
+                        </div>
+                        <div class="color-ko">
+                            Nombre de tests KO : {{ campagne.data['KO'] }} <br>
+                            Pourcentage de tests KO : {{ campagne.data['pctRatage'] }} % <br>
+                        </div>
+                        <div class="color-nt">
+                            Nombre de tests non testés : {{ campagne.data['nonTeste'] }} <br><br>
+                            Pourcentage de tests non testés : {{ campagne.data['pctNonTeste'] }} % <br><br>
+                        </div>
+                        <div class="tot color-nn">
+                            Temps d'exécution de la campagne : {{ campagne.data['temps'] }} <br>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-1">
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if tests is not empty %}
+                <div>
+                    {% if campagne.etat.isEnPrep and (addTest or deleteTest or editCamp) %}
+                        {% include 'inc/barres-action/barre-actions-detail-campagne.html.twig' with { 'projetId': projet.id, 'campagneId': campagne.id, 'formAddCatalogue' : formAddCatalogue, 'formMassExec' : formMassExec } %}
+                    {% endif %}
+                    <div class="d-flex">
+                        {% if etatCamp %}
+                            {% if campagne.etat.isEnPrep %}
+                                <a class="btn btn-lg petit-btn btn-primary col-3 m-1"
+                                   id="demarrer"
+                                   title="Démarrer la campagne"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#textModal"
+                                   data-bs-action="{{ path('campagnes_demarrer', {'campagneId': campagne.id, 'idProjet': projet.id}) }}"
+                                   data-bs-message="Êtes vous sûr(e) de vouloir démarrer la campagne ? Vous ne pourrez plus modifier, supprimer ni ajouter de tests à celle-ci."
+                                   href="#demarrer">
+                                    <i class="fas fa-play-circle"></i>
+                                </a>
+                            {% endif %}
+                            {% if campagne.etat.isEnCours %}
+                                <a class="btn btn-lg petit-btn btn-primary col-3 m-1"
+                                   id="cloturer"
+                                   title="Clôturer la campagne"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#textModal"
+                                   data-bs-action="{{ path('campagnes_cloturer', {'campagneId': campagne.id, 'idProjet': projet.id}) }}"
+                                   data-bs-message="Êtes vous sûr(e) de vouloir clôturer la campagne ? Vous ne pourrez plus exécuter les tests de celle-ci."
+                                   href="#cloturer">
+                                    <i class="fas fa-stop-circle"></i>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        <div class="info">
+                            {% if not campagne.etat.isCloturee
+                            and ((campagne.etat.isEnCours and etatTest) or (campagne.etat.isEnPrep and addTest)) %}
+                                <a class="btn petit-btn btn-lg btn-primary col-3 m-1" title="Afficher/Cacher l'aide" id="bouton-afficher-informations">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <h3 class="title-info">Informations</h3>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="information-cas-tests">
+                        {% if campagne.etat.isEnCours and etatTest %}
+                            <div>
+                                <p>Pour exécuter plusieurs tests d'un coup, vous pouvez...</p>
+                                <div class="explain-test-behavior">
+                                    <p class="step-1-background">1 - Sélectionner des tests</p>
+                                    <p class="step-2-background">2 - Sélectionner un nouvel état</p>
+                                    <p class="step-3-background">3 - Enfin, cliquer sur enregister </p>
+                                </div>
+                                <p>Vous pouvez aussi cliquer sur le bouton de modification de chaque test afin d'ajouter des précisions ou changer son état</p>
+                                <p>Cliquez sur Executer des tests pour cacher le formulaire, et sur le bouton info pour cacher l'aide</p>
+                                <p>Une fois l'exécution terminée, cliquez sur le bouton avec le symbole stop pour clôturer la campagne ! </p>
+                            </div>
+                        {% endif %}
+                        {% if campagne.etat.isEnPrep and addTest %}
+                            <div>
+                                <p>Pour ajouter tout un catalogue d'un coup, cliquez sur Ajouter un catalogue, ensuite vous pouvez...</p>
+                                <div class="explain-test-behavior">
+                                    <p class="step-1-background">1 - Choisir un catalogue</p>
+                                    <p class="step-2-background">2 - Cliquer sur le bouton ajouter</p>
+                                    <p class="step-3-background">3 - Le catalogue entier est ajouté</p>
+                                </div>
+                                <p>Pour supprimer plusieurs tests d'un coup, vous pouvez...</p>
+                                <div class="explain-test-behavior">
+                                    <p class="step-1-background">1 - Sélectionner des tests</p>
+                                    <p class="step-2-background">2 - Cliquer sur supprimer</p>
+                                    <p class="step-3-background">3 - Les tests sont supprimés</p>
+                                </div>
+                                <p>Une fois la préparation terminée, cliquez sur le bouton avec le symbole start pour commencer à exécuter les tests ! </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="{% if not campagne.etat.isEnCours %}d-none{% endif %}" id="form-mass-exec-tests">
+                        {% if campagne.etat.isEnCours and etatTest %}
+                            {{ form_start(formMassExec) }}
+                            {{ form_label(formMassExec.etat) }}
+                            {{ form_widget(formMassExec.etat) }}
+                            <button class="btn btn-lg btn-primary" type="submit" name="exec-tests">
+                                <i class="far fa-save"></i>
+                                <span class="text-ab-link"> Enregistrer</span>
+                            </button>
+                        {% endif %}
+                        <a class="btn btn-lg btn-primary m-2" title="Voir les statistiques" href="{{ path('campagnes_resultats', {'campagneId': campagne.id, 'idProjet': projet.id}) }}">
+                            <i class="fas fa-chart-line"></i>
+                            Statistiques de la campagne
+                        </a>
+                    </div>
+                    <div class="container-searchbar-and-button">
+                        <div class="container-searchbar">
+                            <label for="searchbar-campagne-detail">Rechercher un test par son nom</label>
+                            <div>
+                                <span><i class="fas fa-search"></i></span>
+                                <input id="searchbar-campagne-detail" class="searchbar-input" placeholder="Rechercher un test.." type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                {% if tests is empty %}
+                    {% if campagne.etat.isEnPrep %}
+                        <div class="text-center mt-5">
+                            <p>Il n'y a aucun test dans la campagne pour le moment</p>
+                            <a class="btn btn-lg btn-primary m-3" href="{{ path('campagnes_tests_creer', { 'campagneId': campagne.id, 'idProjet': projet.id }) }}">
+                                Ajouter un test
+                            </a>
+                            <a class="btn btn-lg btn-primary m-3" id="bouton-afficher">
+                                Ajouter un catalogue
+                            </a>
+                            <div class="d-flex justify-content-center">
+                                <div class="d-none" id="form-add-catalogue">
+                                    {% if campagne.etat.isEnPrep %}
+                                        {{ form_start(formAddCatalogue) }}
+                                        {{ form_widget(formAddCatalogue) }}
+                                        <button class="btn btn-lg btn-primary" type="submit" name="add-catalogue">
+                                            <i class="fas fa-plus"></i>
+                                            <span> Ajouter</span>
+                                        </button>
+                                        <a class="btn btn-lg btn-primary" title="Ajouter un catalogue de test" id="bouton-cacher">
+                                            <i class="fas fa-minus"></i>
+                                            <span> Annuler</span>
+                                        </a>
+                                        {{ form_end(formAddCatalogue) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <table class="table table-striped table-sortable">
+                        <thead>
+                        <tr>
+                            <th scope="col"><input type="checkbox" onclick="toggle(this)"></th>
+                            <th scope="col" class="sort-column">#</th>
+                            <th scope="col" class="sort-column">Nom</th>
+                            {% if not campagne.etat.isEnCours %}
+                                <th scope="col" class="sort-column">Description</th>
+                                <th scope="col" class="sort-column">Catalogue(s)</th>
+                            {% endif %}
+                            <th scope="col" class="sort-column">Etat</th>
+                            {% if not campagne.etat.isEnPrep %}
+                                <th scope="col" class="sort-column">Précisions</th>
+                            {% endif %}
+                            {% if not campagne.etat.isCloturee %}
+                                <th scope="col">Actions</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody class="drag-and-drop" id="sortable">
+                        {% for test in tests %}
+                            <tr data-id="{{ test.id }}" class="test {% if test.etat.isOK %}ok{% elseif test.etat.isKO %}ko{% endif %}" rel="{{ test.id }}">
+                                <td class="no-info checkbox-camp">
+                                    <input type="checkbox" id="test_etat_test_{{ test.id }}" name="test_etat[test][]" class="form-check-input test-checkboxes" value="{{ test.id }}">
+                                    <label class="form-check-label" for="test_etat_test_{{ test.id }}">{{ test.id }}</label>
+                                </td>
+                                <td class="ordre">
+                                    {{ test.ordre }}
+                                </td>
+                                <td class="test-nom {% if not campagne.etat.isEnCours %}col-lg-2{% else %}col-lg-3{% endif %} col-md-3 col-sm-2 nom-test">
+                                    {% if test.nom is not empty %}
+                                        <div id="test-nom-long" class="d-none">
+                                            {{ test.nom }}
+                                        </div>
+                                        <div id="test-nom-short">
+                                            {{ test.nom | length > 50 ? test.nom | slice(0, 50) ~ '...' : test.nom }}
+                                        </div>
+                                    {% else %}
+                                        {{ test.template.nom }}
+                                    {% endif %}
+                                    <div id="cas-test-nom-parent" class="d-none parent-info">
+                                        {% if test.template %}
+                                            Parent : {% if test.nom is not empty %}{{ test.template.nom }}{% endif %}{% if test.nom is empty %}identique{% endif %}
+                                        {% else %}
+                                            Parent : aucun
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% if not campagne.etat.isEnCours %}
+                                    {# limitation du nombre de charactères de la description sur le fichier templateTest.js #}
+                                    <td class="test-description {% if campagne.etat.isEnPrep %}col-lg-6 col-md-6 col-sm-4{% elseif campagne.etat.isCloturee %}col-lg-4 col-md-4 col-sm-{% endif %}">
+                                        <div id="test-description-long" class="d-none description-test">
+                                            {% if test.description is not empty %}
+                                                {{ test.description | nl2br }}
+                                            {% else %}
+                                                {{ test.template.description|nl2br }}
+                                            {% endif %}
+                                        </div>
+                                        <div id="test-description-short" class="description-test">
+                                            {% if test.description is not empty %}
+                                                {{ test.description | length > 50 ? test.description | slice(0, 50) ~ '...' : test.description }}
+                                            {% else %}
+                                                {{ test.template.description | length > 50 ? test.template.description | slice(0, 50) ~ '...' : test.template.description  }}
+                                            {% endif %}
+                                        </div>
+                                        <div id="cas-test-description-parent" class="d-none parent-info">
+                                            {% if test.template %}
+                                                {#
+                                                Version : {{ test.template.version }} <br>
+
+                                                POUR L'INSTANT LE VERSIONNING N'EST PAS MIS EN PLACE : DECOMMENTER LA LIGNE D'AU DESSUS POUR AFFICHER LA VERSION
+                                                #}
+                                                Parent : {% if test.description is not empty %}{{ test.template.description|nl2br}}{% endif %}{% if test.description is empty %}identique{% endif %}
+                                            {% else %}
+                                                Parent : aucun
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="test-catalogue col-lg-1 col-md-2 col-sm-2">
+                                        <p id="catalogue-short" class="catalogue-test">
+                                            {% if test.template %}
+                                                {% if test.template.templateCatalogueRelation | length > 0 %}
+                                                    {{ test.template.templateCatalogueRelation[0].catalogue.libelle }} {% if test.template.templateCatalogueRelation | length > 1 %} [+{{ test.template.templateCatalogueRelation | length - 1 }}] {% endif %}
+                                                {% else %}
+                                                    NON CLASSÉ
+                                                {% endif %}
+                                            {% else %}
+                                                NON CLASSÉ
+                                            {% endif %}
+                                        </p>
+                                        <p id="catalogue-long" class="d-none catalogue-test">
+                                            {% if test.template %}
+                                                {% if test.template.templateCatalogueRelation | length > 0 %}
+                                                    {% for relation in test.template.templateCatalogueRelation %}
+                                                        {{ relation.catalogue.libelle }} <br>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    NON CLASSÉ
+                                                {% endif %}
+                                            {% else %}
+                                                NON CLASSÉ
+                                            {% endif %}
+                                        </p>
+                                    </td>
+                                    <td class="test-etat col-lg-1 col-md-2 col-sm-2 no-info etat-test">
+                                        {{ test.etat.libelle }} <br>
+                                    </td>
+                                {% endif %}
+                                {% if not campagne.etat.isEnPrep %}
+                                    {% if campagne.etat.isEnCours %}
+                                    <td class="col-lg-1 col-md-2 col-sm-2 etat-test">
+                                        {{ test.etat.libelle }}
+                                    </td>
+                                    {% endif %}
+                                    <td class="col-lg-5 col-md-3 col-sm-8 precisions-resultat">
+                                        {% if test.precisionsResultat %}
+                                            {{ test.precisionsResultat }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                {% if not campagne.etat.isCloturee %}
+                                    <td class="no-info col-sm-3 actions col-lg-2">
+                                        {% if campagne.etat.isEnPrep %}
+                                            {% if addTest %}
+                                                <a href="{{ path('campagnes_tests_modifier', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}" class="btn petit-btn-action btn-fonce py-2" title="Modifier le test">
+                                                    <i class="far fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if deleteTest %}
+                                                <a class="btn btn-red py-2 delete petit-btn-action"
+                                                   title="Supprimer le test"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#textModal"
+                                                   data-bs-action="{{ path('campagnes_tests_supprimer', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}"
+                                                   data-bs-message="Voulez-vous vraiment supprimer le test {{ test.nom ? test.nom : test.template.nom }} ? Ces données ne seront pas récupérables."
+                                                   href="{{ path('campagnes_tests_supprimer', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% elseif campagne.etat.isEnCours and etatTest %}
+                                            <a href="{{ path('campagnes_tests_executer', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}" class="btn btn-fonce py-2 petit-btn-action" title="Exécuter/Rectifier le test">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a href="{{ path('campagnes_tests_valider', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}" class="btn btn-green py-2 petit-btn-action" title="Valider le test (OK)">
+                                                <i class="fas fa-check-double"></i>
+                                            </a>
+                                            <a href="{{ path('campagnes_tests_refuser', {'campagneId': campagne.id, 'idProjet': projet.id, 'testId': test.id}) }}" class="btn btn-red py-2 petit-btn-action" title="Refuser le test (KO)">
+                                                <i class="fas fa-ban"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+                {% if tests is not empty %}
+                    {% if (campagne.etat.isEnCours and etatTest) or (campagne.etat.isEnPrep and deleteTest) %}
+                        <div class="d-none">
+                            {{ form_widget(formMassExec) }}
+                        </div>
+                        {{ form_end(formMassExec) }}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% include 'inc/modals/delete-modal.html.twig' %}
+    {% include 'inc/modals/text-modal.html.twig' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+    <script src="{{ asset('scripts/campagnes/scriptsPageCampagne.js') }}" data-isEnPrep="{% if campagne.etat.isEnPrep %}true{% else %}false{% endif %}" data-isEnCours="{% if campagne.etat.isEnCours %}true{% else %}false{% endif %}"></script>
+    <script src="{{ asset('scripts/utils/dragAndDrop.js') }}" class="{{ path('campagnes_ordonner', {'idProjet' : projet.id, 'campagneId' : campagne.id}) }}"></script>
+    <script src="{{ asset('scripts/utils/toggleTestAllCheckbox.js') }}"></script>
+    <script src="{{ asset('scripts/modals/textModal.js') }}"></script>
+    <script src="{{ asset('scripts/utils/alertDelete.js') }}"></script>
+    <script src="{{ asset('scripts/utils/sortableFilter.js')}}"></script>
+    <script src="{{ asset('scripts/campagnes/searchbarCampagneDetail.js') }}"></script>
+    {% if campagne.etat.isCloturee %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{ asset('scripts/utils/charts.js') }}" data-campagne-nb-ok="{{ campagne.data['OK'] }}" data-campagne-nb-ko="{{ campagne.data['KO'] }}" data-campagne-nb-nt="{{ campagne.data['nonTeste'] }}"></script>
+    {% endif %}
+
+{% endblock %}
+
+

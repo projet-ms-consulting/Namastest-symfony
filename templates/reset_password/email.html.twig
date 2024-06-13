@@ -1,0 +1,13 @@
+<h1>Bonjour!</h1>
+
+<p>Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant</p>
+
+<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+
+<p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+<p>À bientôt!</p>
+
+<p>L'équipe Namastest</p>
+
+<img src="{{ absolute_url('img/Logo_App_With_NT.png') }}" alt="logo NamasTest">

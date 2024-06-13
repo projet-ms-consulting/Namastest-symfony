@@ -1,0 +1,73 @@
+<style>
+    .header {
+        height: 70px;
+        padding: 5px;
+        background-color: #f8f9fa;
+        border: solid 1px #dee2e6;
+    }
+
+    .header h1 {
+        font-weight: bold;
+        line-height: 40px;
+    }
+
+    .namas {
+        color: #1e7c9e;
+    }
+
+    .test {
+        color: #0D4D63;
+    }
+
+    img {
+        height: 70px;
+        float: left;
+        margin-right: 20px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .card {
+        background-color: #f8f9fa;
+        border: solid 1px #dee2e6;
+        padding: 10px;
+        margin: 0 5px 10px;
+    }
+
+    h4 {
+        margin: 20px auto 5px;
+    }
+</style>
+
+<div class="header">
+    <a href="https://www.namastest.com">
+        <img src="{{ email.image('@img/Logo_App.png') }}" alt="logo">
+        <h1><span class="namas">Namas</span><span class="test">Test</span></h1>
+    </a>
+</div>
+
+<h3>Bonjour {{ message.prenom | ucwords }},</h3>
+
+<p>Merci pour votre message !</p>
+
+<h4>Votre demande :</h4>
+<div class="card">
+    <div><b>{{ message.objet }}</b></div>
+    <hr>
+    <div>{{ message.message | nl2br }}</div>
+</div>
+
+<h4>Réponse :</h4>
+<div class="card">
+    <div>{{ reponse.message | nl2br }}</div>
+    <p>{{ app.user.email }}</p>
+</div>
+
+<hr>
+
+<p>À bientôt!</p>
+
+<p>L'équipe Namastest</p>
+

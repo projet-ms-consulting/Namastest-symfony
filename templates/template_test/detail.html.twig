@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du cas de test {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="row row-cols-1">
+
+        <h1 class="text-center">Detail du cas de test</h1>
+        <hr>
+        <h2>{{ test.nom }}</h2>
+        <hr>
+        <p>{{ test.description|nl2br }}</p>
+
+    </div>
+    <div style="display: flex">
+    <a class="btn btn-lg btn-primary" style="margin-right: 20px" href="{{ path('templates_test_liste', {'id': projet.id}) }}"> Retour</a>
+    <button id="ajouter" class="btn btn-lg btn-primary" onclick='afficherCommentaire()'> Ajouter un commentaire
+    </button>
+    </div>
+    <div id="formulaire" class="row row-cols-3" style="display: none">
+
+        {{ form_start(formCommentaire)}}
+        {{ form_row(formCommentaire.message, {'attr':{'style':'min-width: 150%; min-height: 150px; margin-top: 20px; margin-bottom: 20px'}}) }}
+        <button id="publier" class="btn btn-lg btn-primary">Publier</button>
+        <input type="button" style="margin: 15px;" id="annuler" class="btn btn-lg btn-red deleteLink mt-1 mb-1" value="Annuler" onclick="cacherCommentaire()">
+        {{ form_end(formCommentaire) }}
+    </div>
+
+    <div id="modifierMessage" class="row row-cols-3" style="display: none">
+        <form id="formModifier" method="post">
+        <textarea id="messageActuel" name="messageActuel" style="min-width: 150%; min-height: 150px; margin-top: 20px; margin-bottom: 20px">
+
+        </textarea>
+        <button id="publierMessage" class="btn btn-lg btn-primary">Publier</button>
+        <input type="button" style="margin: 15px;" id="annulerMessage" class="btn btn-lg btn-red mt-1 mb-1" value="Annuler" onclick="annulerChangement()">
+        </form>
+    </div>
+    <div class="row row-cols-2">
+        {% if commentaires %}
+            <table style="margin: 20px 0" class="table table-striped table-sortable ">
+                <tbody class="drag-and-drop" id="sortable">
+                {% for c in commentaires %}
+                    <tr>
+                        <td>@{{ c.auteur.nom }} / {{ c.dateCreation | date('d-m-Y') }}</td>
+                        <td id="{{ c.id }}">{{ c.message }}</td>
+                        <td>
+                            <div class="nav-item dropdown ms-1">
+                                <a class="btn btn-primary py-2" role="button" data-bs-toggle="dropdown" >
+                                    <i class="fa fa-cog"></i></a>
+
+                                <ul class="dropdown-menu">
+
+                                    <li><a class="dropdown-item" title="Modifier le Commentaire" onclick="modifierCommentaire({{ c.id }})">  Modifier</a></li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li><a href="{{ path('commentaire_supprimer', {'idCommentaire': c.id}) }}"
+                                           class="dropdown-item text-danger delete" title="Supprimer le Commentaire" id="confirm"
+                                           onclick="return confirm('Voulez vous vraiment effacer ce Commentaire?')">  Supprimer</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    <script>
+        let publier = document.getElementById('publier');
+        publier.setAttribute('style', "display: none");
+
+        let divCommentaire = document.getElementById('formulaire');
+        divCommentaire.setAttribute('style', "display: none");
+
+        let ajouter = document.getElementById('ajouter');
+        ajouter.setAttribute('style', "display: initial");
+
+        let divModifier = document.getElementById('modifierMessage');
+        divModifier.setAttribute('style', "display: none");
+
+        function afficherCommentaire() {
+            divModifier.setAttribute('style', "display: none");
+            divCommentaire.setAttribute('style', "display: initial");
+            publier.setAttribute('style', "display: initial");
+            ajouter.setAttribute('style', "display: none");
+        }
+        function cacherCommentaire(){
+            divCommentaire.setAttribute('style', "display: none");
+            publier.setAttribute('style', "display: none");
+            ajouter.setAttribute('style', "display: initial");
+            document.getElementById('commentaire_message').value='';
+        }
+        function modifierCommentaire(idMessage){
+            divCommentaire.setAttribute('style', "display: none");
+            ajouter.setAttribute('style', "display: initial");
+            let textArea = document.getElementById('messageActuel');
+            textArea.value=document.getElementById(idMessage).innerText;
+            divModifier.setAttribute('style', "display: initial");
+
+            let formModifier = document.getElementById('formModifier');
+            let url = "{{ path('commentaire_modifier', {'idCommentaire': 'idMessage'}) }}";
+            url = url.replace('idMessage', idMessage);
+
+            formModifier.setAttribute('action', url);
+        }
+        function annulerChangement(){
+            divModifier.setAttribute('style', "display: none");
+        }
+
+
+    </script>
+{% endblock %}
+
